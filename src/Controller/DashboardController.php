@@ -6,7 +6,6 @@ use App\Entity\BookLoan;
 use App\Entity\User;
 use App\Repository\BookFavoriteRepository;
 use App\Repository\BookLoanRepository;
-use App\Repository\EventRegistrationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -17,7 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class DashboardController extends AbstractController
 {
     #[Route('/mon-compte', name: 'app_dashboard')]
-    public function index(BookLoanRepository $bookLoanRepository, EventRegistrationRepository $eventRegistrationRepository, BookFavoriteRepository $bookFavoriteRepository): Response
+    public function index(BookLoanRepository $bookLoanRepository, BookFavoriteRepository $bookFavoriteRepository): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -27,7 +26,6 @@ final class DashboardController extends AbstractController
         return $this->render('dashboard/index.html.twig', [
             'user' => $user,
             'activeLoans' => $bookLoanRepository->findActiveByUser($user),
-            'eventRegistrations' => $eventRegistrationRepository->findByUser($user),
             'favorites' => $bookFavoriteRepository->findByUser($user),
         ]);
     }
