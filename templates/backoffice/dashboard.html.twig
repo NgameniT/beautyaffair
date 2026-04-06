@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }} | BiblioConnect{% endblock %}
+
+{% block body %}
+
+<div class="page-header">
+    <span class="eyebrow">{{ isAdmin ? 'Administration' : 'Bibliothécaire' }}</span>
+     </div>
+
+<!-- Stats -->
+<div class="stats-row" style="margin-bottom:32px;">
+    <div class="stat-card">
+        <strong>{{ booksCount }}</strong>
+        <p>Ouvrages au catalogue</p>
+    </div>
+    <div class="stat-card">
+        <strong>{{ activeLoansCount }}</strong>
+        <p>Réservations actives</p>
+    </div>
+    <div class="stat-card">
+        <strong>{{ pendingReservationsCount }}</strong>
+        <p>Réservations planifiées</p>
+    </div>
+    {% if pendingReviewsCount is not null %}
+        <div class="stat-card" style="border-left:3px solid {{ pendingReviewsCount > 0 ? '#f59e0b' : 'var(--g200)' }};">
+            <strong>{{ pendingReviewsCount }}</strong>
+            <p>Avis à modérer</p>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Actions rapides -->
+<div class="card card-body">
+    <h2 style="font-size:1rem;margin-bottom:18px;color:var(--g500);font-weight:600;text-transform:uppercase;letter-spacing:.5px;">Navigation</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;">
+        {% if isAdmin %}
+            <a class="card" href="{{ path('app_admin_books') }}" style="padding:18px 20px;text-decoration:none;display:flex;align-items:center;gap:12px;transition:box-shadow .18s ease;">
+                <div><strong style="font-size:.9rem;color:var(--g900);display:block;">Catalogue</strong><span style="font-size:.78rem;color:var(--g500);">Gérer les ouvrages</span></div>
+            </a>
+            <a class="card" href="{{ path('app_admin_reservations_history') }}" style="padding:18px 20px;text-decoration:none;display:flex;align-items:center;gap:12px;">
+                <div><strong style="font-size:.9rem;color:var(--g900);display:block;">Réservations</strong><span style="font-size:.78rem;color:var(--g500);">Historique complet</span></div>
+            </a>
+            <a class="card" href="{{ path('app_admin_review_moderation') }}" style="padding:18px 20px;text-decoration:none;display:flex;align-items:center;gap:12px;">
+                <div><strong style="font-size:.9rem;color:var(--g900);display:block;">Modération</strong><span style="font-size:.78rem;color:var(--g500);">Commenter les avis</span></div>
+            </a>
+            <a class="card" href="{{ path('app_admin_users') }}" style="padding:18px 20px;text-decoration:none;display:flex;align-items:center;gap:12px;">
+                <div><strong style="font-size:.9rem;color:var(--g900);display:block;">Utilisateurs</strong><span style="font-size:.78rem;color:var(--g500);">Gérer les rôles</span></div>
+            </a>
+        {% else %}
+            <a class="card" href="{{ path('app_librarian_books') }}" style="padding:18px 20px;text-decoration:none;display:flex;align-items:center;gap:12px;">
+                <div><strong style="font-size:.9rem;color:var(--g900);display:block;">Catalogue</strong><span style="font-size:.78rem;color:var(--g500);">Gérer les ouvrages</span></div>
+            </a>
+            <a class="card" href="{{ path('app_librarian_reservations_history') }}" style="padding:18px 20px;text-decoration:none;display:flex;align-items:center;gap:12px;">
+                <div><strong style="font-size:.9rem;color:var(--g900);display:block;">Réservations</strong><span style="font-size:.78rem;color:var(--g500);">Historique complet</span></div>
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
+

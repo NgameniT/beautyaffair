@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }} | BiblioConnect{% endblock %}
+
+{% block body %}
+
+<div class="flex-between" style="margin-bottom:28px;">
+    <div>
+        <h1>Historique des réservations</h1>
+    </div>
+    <a class="btn-ghost btn-xs" href="{{ path(dashboardRoute) }}" style="text-decoration:none;">← Tableau de bord</a>
+</div>
+
+<div class="card" style="overflow:hidden;">
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Usager</th>
+                    <th>Livre</th>
+                    <th>Réservé le</th>
+                    <th>Planifié pour</th>
+                    <th>Statut</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for loan in loans %}
+                    <tr>
+                        <td style="font-weight:600;color:var(--g800);">{{ loan.user.fullName ?: loan.user.userIdentifier }}</td>
+                        <td>{{ loan.book.title }}</td>
+                        <td>{{ loan.reservedAt ? loan.reservedAt|date('d/m/Y') : '—' }}</td>
+                        <td>{{ loan.scheduledFor ? loan.scheduledFor|date('d/m/Y') : '—' }}</td>
+                        <td>
+                            {% if loan.status == 'active' %}
+                                <span class="badge badge-ok">Actif</span>
+                            {% else %}
+                                <span class="badge">Retourné</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="5" style="text-align:center;padding:32px;color:var(--g400);">Aucune réservation enregistrée.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

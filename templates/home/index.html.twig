@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil | BiblioConnect{% endblock %}
+
+{% block body %}
+
+<!-- Hero -->
+<section style="text-align:center; padding: 72px 0 56px;">
+    {# <span style="display:inline-block;background:var(--g100);color:var(--g500);font-size:.72rem;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;padding:4px 14px;border-radius:999px;margin-bottom:20px;">Bibliothèque numérique</span> #}
+    {# <h1 style="font-size:clamp(2.2rem,5vw,3.6rem);font-weight:800;letter-spacing:-1px;margin-bottom:16px;line-height:1.15;">
+        La bibliothèque<br>à portée de clic.
+    </h1> #}
+    <p style="font-size:1.05rem;color:var(--g500);max-width:42ch;margin:0 auto 36px;line-height:1.7;">
+        Explorez des milliers d'ouvrages, réservez en quelques secondes et gérez vos emprunts où que vous soyez.
+    </p>
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:12px;">
+        <a class="btn" href="{{ path('app_catalogue') }}" style="padding:11px 28px;font-size:.95rem;">Explorer le catalogue</a>
+        {% if app.user %}
+            <a class="btn-outline" href="{{ path('app_dashboard') }}" style="padding:11px 28px;font-size:.95rem;">Mon espace</a>
+        {% else %}
+            <a class="btn-outline" href="{{ path('app_login') }}" style="padding:11px 28px;font-size:.95rem;">Se connecter</a>
+        {% endif %}
+    </div>
+</section>
+<!-- CTA bande -->
+{% if not app.user %}
+<div class="card card-body" style="background:var(--g900);border-color:var(--g900);display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;">
+    <div>
+        <h2 style="color:#fff;margin-bottom:6px;">Prêt à commencer ?</h2>
+        <p style="color:var(--g400);">Créez votre compte gratuitement en moins d'une minute.</p>
+    </div>
+    <a class="btn" href="{{ path('app_register') }}" style="background:var(--white);color:var(--g900);border-color:var(--white);padding:11px 28px;">Créer un compte</a>
+</div>
+{% endif %}
+
+{% endblock %}
+

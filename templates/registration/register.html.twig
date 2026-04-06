@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription | BiblioConnect{% endblock %}
+
+{% block body %}
+<style>
+.auth-wrap {
+    display: flex; align-items: center; justify-content: center;
+    min-height: calc(100vh - 62px - 80px); padding: 40px 0;
+}
+.auth-card {
+    width: 100%; max-width: 480px;
+    background: var(--white); border: 1px solid var(--g200);
+    border-radius: 18px; box-shadow: var(--shadow); overflow: hidden;
+}
+.auth-header { padding: 34px 36px 22px; border-bottom: 1px solid var(--g100); }
+.auth-header h1 { font-size: 1.5rem; margin-bottom: 6px; }
+.auth-header p  { font-size: .875rem; color: var(--g500); }
+.auth-body { padding: 26px 36px 34px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width:480px) { .form-row { grid-template-columns: 1fr; } .auth-header,.auth-body { padding-left: 22px; padding-right: 22px; } }
+</style>
+<div class="auth-wrap">
+<div class="auth-card">
+    <div class="auth-header">
+        <h1>Créer un compte</h1>
+        <p>Rejoignez BiblioConnect et accédez à tout le catalogue.</p>
+    </div>
+    <div class="auth-body">
+
+        {% for flash_error in app.flashes('verify_email_error') %}
+            <div class="flash-msg flash-danger">{{ flash_error }}</div>
+        {% endfor %}
+
+        {{ form_start(registrationForm, {attr: {novalidate: 'novalidate'}}) }}
+
+            <div class="form-row">
+                <div class="field">
+                    {{ form_label(registrationForm.prenom, 'Prénom') }}
+                    {{ form_widget(registrationForm.prenom, {attr: {placeholder: 'Marie'}}) }}
+                    {% if form_errors(registrationForm.prenom)|length > 0 %}
+                        <div class="field-error">{{ form_errors(registrationForm.prenom) }}</div>
+                    {% endif %}
+                </div>
+                <div class="field">
+                    {{ form_label(registrationForm.nom, 'Nom') }}
+                    {{ form_widget(registrationForm.nom, {attr: {placeholder: 'Dupont'}}) }}
+                    {% if form_errors(registrationForm.nom)|length > 0 %}
+                        <div class="field-error">{{ form_errors(registrationForm.nom) }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="field">
+                {{ form_label(registrationForm.email, 'Adresse email') }}
+                {{ form_widget(registrationForm.email, {attr: {placeholder: 'exemple@email.com'}}) }}
+                {% if form_errors(registrationForm.email)|length > 0 %}
+                    <div class="field-error">{{ form_errors(registrationForm.email) }}</div>
+                {% endif %}
+            </div>
+
+            <div class="field">
+                {{ form_label(registrationForm.plainPassword.first, 'Mot de passe') }}
+                {{ form_widget(registrationForm.plainPassword.first, {attr: {placeholder: '8 caractères minimum'}}) }}
+                {% if form_errors(registrationForm.plainPassword.first)|length > 0 %}
+                    <div class="field-error">{{ form_errors(registrationForm.plainPassword.first) }}</div>
+                {% endif %}
+                <div style="font-size:.74rem;color:var(--g400);margin-top:4px;">Majuscule, minuscule et chiffre requis.</div>
+            </div>
+
+            <div class="field">
+                {{ form_label(registrationForm.plainPassword.second, 'Confirmer le mot de passe') }}
+                {{ form_widget(registrationForm.plainPassword.second, {attr: {placeholder: 'Répétez le mot de passe'}}) }}
+                {% if form_errors(registrationForm.plainPassword.second)|length > 0 or form_errors(registrationForm.plainPassword)|length > 0 %}
+                    <div class="field-error">
+                        {{ form_errors(registrationForm.plainPassword.second) }}
+                        {{ form_errors(registrationForm.plainPassword) }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-check" style="margin-bottom:20px;">
+                {{ form_widget(registrationForm.agreeTerms) }}
+                {{ form_label(registrationForm.agreeTerms, "J'accepte les conditions d'utilisation") }}
+                {% if form_errors(registrationForm.agreeTerms)|length > 0 %}
+                    <div class="field-error">{{ form_errors(registrationForm.agreeTerms) }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn" style="width:100%;justify-content:center;padding:11px;">
+                Créer mon compte
+            </button>
+
+        {{ form_end(registrationForm) }}
+
+        <div style="text-align:center;margin-top:20px;padding-top:18px;border-top:1px solid var(--g100);">
+            <p style="font-size:.82rem;">Déjà un compte ?
+                <a href="{{ path('app_login') }}" style="color:var(--g900);font-weight:600;text-decoration:none;"> Se connecter</a>
+            </p>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

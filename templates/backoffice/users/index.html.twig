@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Utilisateurs | BiblioConnect{% endblock %}
+
+{% block body %}
+
+<div class="flex-between" style="margin-bottom:28px;">
+    <div>
+        <h1>Gestion des utilisateurs</h1>
+        <p>Consultez et modifiez les rôles des membres inscrits.</p>
+    </div>
+    <div class="flex-gap">
+        <a class="btn-ghost btn-xs" href="{{ path('app_admin_dashboard') }}" style="text-decoration:none;">← Tableau de bord</a>
+        <a class="btn btn-xs" href="{{ path('app_admin_users_new') }}" style="text-decoration:none;">+ Ajouter un utilisateur</a>
+    </div>
+</div>
+
+<div class="card" style="overflow:hidden;">
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Utilisateur</th>
+                    <th>Email</th>
+                    <th>Rôle actuel</th>
+                    <th>Modifier le rôle</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td style="font-weight:600;color:var(--g900);">{{ user.fullName ?: user.userIdentifier }}</td>
+                        <td style="color:var(--g500);">{{ user.email }}</td>
+                        <td>
+                            {% set role = user.roles|first %}
+                            {% if role == 'ROLE_ADMIN' %}
+                                <span class="badge badge-alert">Admin</span>
+                            {% elseif role == 'ROLE_LIBRARIAN' %}
+                                <span class="badge badge-blue">Bibliothécaire</span>
+                            {% else %}
+                                <span class="badge">Usager</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form style="display:flex;gap:8px;align-items:center;" method="post" action="{{ path('app_admin_user_role', {id: user.id}) }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('update-role-' ~ user.id) }}">
+                                <select name="role" style="padding:6px 10px;border:1px solid var(--g300);border-radius:var(--r-sm);font-size:.82rem;color:var(--g700);background:var(--white);font-family:inherit;outline:none;">
+                                    <option value="ROLE_USER" {{ (user.roles|first) == 'ROLE_USER' ? 'selected' : '' }}>Usager</option>
+                                    <option value="ROLE_LIBRARIAN" {{ (user.roles|first) == 'ROLE_LIBRARIAN' ? 'selected' : '' }}>Bibliothécaire</option>
+                                    <option value="ROLE_ADMIN" {{ (user.roles|first) == 'ROLE_ADMIN' ? 'selected' : '' }}>Admin</option>
+                                </select>
+                                <button class="btn-outline btn-xs" type="submit" style="white-space:nowrap;">Enregistrer</button>
+                            </form>
+                        </td>
+                        <td>
+                            <div style="display:flex;gap:8px;">
+                                <a class="btn-outline btn-xs" href="{{ path('app_admin_users_edit', {id: user.id}) }}" style="text-decoration:none;">Modifier</a>
+                                <form method="post" action="{{ path('app_admin_users_delete', {id: user.id}) }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete-user-' ~ user.id) }}">
+                                    <button class="btn-outline btn-xs" type="submit" style="color:#d32f2f;border-color:#d32f2f;">Supprimer</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
