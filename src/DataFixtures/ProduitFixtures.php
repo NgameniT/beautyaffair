@@ -13,7 +13,8 @@ class ProduitFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         $perruque = $this->getReference(CategorieFixtures::PERRUQUE_REF, Categorie::class);
-        $bijou    = $this->getReference(CategorieFixtures::BIJOU_REF, Categorie::class);
+        $bijou    = $this->getReference(CategorieFixtures::BIJOU_REF,    Categorie::class);
+        $soins    = $this->getReference(CategorieFixtures::SOINS_REF,    Categorie::class);
 
         $produits = [
             // Perruques
@@ -31,6 +32,14 @@ class ProduitFixtures extends Fixture implements DependentFixtureInterface
             ['Parure Complète',                15000, 10, 'Set collier + boucles + bracelet assortis, parfait en cadeau.',      $bijou],
             ['Barrettes & Épingles',            2500, 50, 'Accessoires cheveux tendance : barrettes perlées, épingles fleurs.', $bijou],
             ['Chaîne de Cheville',              3000, 30, 'Chaîne fine réglable plaqué or, parfaite pour l\'été.',             $bijou],
+
+            // Soins Perruques
+            ['Huile Brillance Perruque Lisse',  4500, 25, 'Huile légère pour entretenir et faire briller les perruques lisses. Sans résidu.',               $soins],
+            ['Spray Hydratant Curly',           5000, 20, 'Spray démêlant et hydratant pour perruques bouclées et crêpues. Restitue le volume.',            $soins],
+            ['Colle Perruque Forte Fixation',   3000, 30, 'Colle professionnelle longue durée pour la pose de perruques lace et full lace.',                $soins],
+            ['Bandes Adhésives (lot de 36)',    2500, 40, 'Bandes double-face pour la pose de perruques. Résistantes à la transpiration.',                  $soins],
+            ['Shampooing Doux Perruque',        4000, 20, 'Shampooing sans sulfate formulé pour nettoyer délicatement les perruques naturelles et synthétiques.', $soins],
+            ['Après-shampooing Démêlant',       3500, 20, 'Après-shampooing démêlant en profondeur pour restaurer la douceur et la brillance de votre perruque.', $soins],
         ];
 
         foreach ($produits as [$nom, $prix, $stock, $desc, $cat]) {

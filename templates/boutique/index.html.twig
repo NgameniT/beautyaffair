@@ -93,7 +93,7 @@
     <div class="container">
         <span class="eyebrow">✦ Boutique</span>
         <h1>Boutique BeautyAffair</h1>
-        <p>Perruques naturelles & synthétiques, bijoux et accessoires. Livraison à Cotonou.</p>
+        <p>Perruques, bijoux, produits d'entretien capillaire et accessoires. Livraison à Cotonou.</p>
     </div>
 </div>
 
@@ -138,6 +138,25 @@
         {% endif %}
     </div>
 </section>
+
+{# ── SOINS PERRUQUES ── #}
+{% if soinsPerruques is not empty %}
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <span class="eyebrow">✦ Soins & Entretien</span>
+            <h2>Prenez soin de votre perruque</h2>
+            <div class="gold-line"></div>
+            <p style="color:var(--text-soft);max-width:52ch;margin:0 auto;">Huiles, sprays, colles et accessoires pour entretenir et prolonger la vie de votre perruque.</p>
+        </div>
+        <div class="product-grid">
+            {% for produit in soinsPerruques %}
+            {% include 'boutique/_card.html.twig' with {produit: produit, favorisIds: favorisIds, icone: '🧴'} %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
 
 {# ── INFOS LIVRAISON ── #}
 <section class="info-band section">

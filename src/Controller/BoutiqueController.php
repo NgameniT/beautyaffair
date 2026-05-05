@@ -17,11 +17,13 @@ final class BoutiqueController extends AbstractController
     {
         $catPerruque = $categories->findOneBy(['slug' => 'perruques']);
         $catBijou    = $categories->findOneBy(['slug' => 'bijoux']);
+        $catSoins    = $categories->findOneBy(['slug' => 'soins-perruques']);
 
         return $this->render('boutique/index.html.twig', [
-            'perruques'   => $produits->findBy(['categorie' => $catPerruque, 'actif' => true], ['nom' => 'ASC']),
-            'bijoux'      => $produits->findBy(['categorie' => $catBijou,    'actif' => true], ['nom' => 'ASC']),
-            'favorisIds'  => $favoris->getIds(),
+            'perruques'      => $produits->findBy(['categorie' => $catPerruque, 'actif' => true], ['nom' => 'ASC']),
+            'bijoux'         => $produits->findBy(['categorie' => $catBijou,    'actif' => true], ['nom' => 'ASC']),
+            'soinsPerruques' => $catSoins ? $produits->findBy(['categorie' => $catSoins, 'actif' => true], ['nom' => 'ASC']) : [],
+            'favorisIds'     => $favoris->getIds(),
         ]);
     }
 

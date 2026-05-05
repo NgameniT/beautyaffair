@@ -10,13 +10,37 @@
     position: relative; overflow: hidden;
     background: linear-gradient(135deg, var(--brown-dark) 0%, #5C2F0E 50%, var(--brown) 100%);
 }
+/* Vidéo d'arrière-plan */
+.hero-video {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%; min-height: 100%;
+    width: auto; height: auto;
+    object-fit: cover;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+.hero-video.loaded { opacity: 1; }
+/* Overlay sombre pour garder le texte lisible */
+.hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(30,10,2,.78) 0%,
+        rgba(61,26,8,.65) 50%,
+        rgba(30,10,2,.55) 100%
+    );
+    z-index: 1;
+}
 .hero::before {
     content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse at 70% 50%, rgba(212,192,165,.15) 0%, transparent 65%);
+    position: absolute; inset: 0; z-index: 2;
+    background: radial-gradient(ellipse at 70% 50%, rgba(212,192,165,.08) 0%, transparent 65%);
 }
 .hero-content {
-    position: relative; z-index: 1;
+    position: relative; z-index: 3;
     max-width: 1200px; margin: 0 auto;
     padding: 80px 24px;
 }
@@ -62,6 +86,7 @@
 .hero-badge {
     position: absolute; right: 10%; top: 50%;
     transform: translateY(-50%);
+    z-index: 3;
     width: 190px; height: 190px;
     border: 1px solid rgba(212,192,165,.35);
     border-radius: 50%;
@@ -119,6 +144,16 @@
 .service-icon {
     font-size: 2.6rem; margin-bottom: 18px; display: block;
 }
+.service-media {
+    width: 100%; height: 180px;
+    border-radius: 6px; margin-bottom: 18px;
+    overflow: hidden;
+}
+.service-media img,
+.service-media video {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+}
 .service-card h3 {
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.35rem; margin-bottom: 10px;
@@ -175,6 +210,30 @@
     margin-bottom: 6px;
 }
 .why-item p { font-size: .88rem; color: var(--text-soft); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+    .hero-badge { display: none; }
+    .hero-content { padding: 60px 24px; }
+}
+@media (max-width: 700px) {
+    .hero { min-height: 92vh; }
+    .hero-content { padding: 48px 20px; }
+    .hero h1 { font-size: clamp(2.4rem, 9vw, 3.5rem); max-width: none; }
+    .hero p { font-size: .95rem; max-width: none; margin-bottom: 28px; }
+    .hero-actions { flex-direction: column; gap: 12px; }
+    .hero-actions a { text-align: center; justify-content: center; }
+    .section { padding: 56px 0; }
+    .section-header { margin-bottom: 36px; }
+    .stats-section { padding: 36px 0; }
+    .stat-item strong { font-size: 2.8rem; }
+    .cta-section { padding: 60px 0; }
+    .service-card { padding: 28px 20px; }
+}
+@media (max-width: 480px) {
+    .hero h1 { font-size: 2.2rem; }
+    .why-item { flex-direction: column; gap: 12px; }
+}
 </style>
 {% endblock %}
 
@@ -182,6 +241,13 @@
 
 <!-- HERO -->
 <section class="hero">
+    {# Vidéo d'arrière-plan — dépose hero.mp4 dans public/videos/ #}
+    <video class="hero-video" autoplay loop muted playsinline preload="auto"
+           oncanplay="this.classList.add('loaded')">
+        <source src="/videos/hero.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay"></div>
+
     <div class="hero-content">
         <span class="hero-eyebrow">✦ Salon de Beauté & Boutique · Bénin</span>
         <h1>L'art de la <em>beauté</em> à votre service</h1>
@@ -192,8 +258,8 @@
         </div>
     </div>
     <div class="hero-badge">
-        <span>10+</span>
-        <small>Ans d'expérience</small>
+        <span>1+</span>
+        <small>An d'expérience</small>
     </div>
 </section>
 
@@ -206,7 +272,7 @@
                 <span>Clients satisfaits</span>
             </div>
             <div class="stat-item">
-                <strong>4</strong>
+                <strong>6</strong>
                 <span>Services premium</span>
             </div>
             <div class="stat-item">
@@ -228,32 +294,48 @@
             <span class="eyebrow">✦ Nos services</span>
             <h2>Une expérience beauté complète</h2>
             <div class="gold-line"></div>
-            <p>Du soin capillaire à la vente de bijoux, tout ce dont vous avez besoin en un seul endroit.</p>
+            <p>Coiffure, ongles, perruques et entretien — tout ce dont vous avez besoin en un seul endroit.</p>
         </div>
-        <div class="four-col">
+        <div class="three-col">
             <div class="service-card">
-                <span class="service-icon">💇‍♀️</span>
+                <div class="service-media">
+                    <img src="/images/coiffure-femme.jpeg" alt="Coiffure Femme">
+                </div>
                 <h3>Coiffure Femme</h3>
                 <p>Coupe, brushing, tresses, nattes, coloration et soins. Un style unique pour chaque femme.</p>
                 <div class="service-price">À partir de 15 000 FCFA</div>
             </div>
             <div class="service-card">
-                <span class="service-icon">💇‍♂️</span>
+                <div class="service-media">
+                    <img src="/images/coiffure-homme.jpeg" alt="Coiffure Homme">
+                </div>
                 <h3>Coiffure Homme</h3>
                 <p>Coupe, dégradé, barbe et soins capillaires. Un look soigné et tendance.</p>
                 <div class="service-price">À partir de 5 000 FCFA</div>
             </div>
             <div class="service-card">
-                <span class="service-icon">💍</span>
-                <h3>Bijoux</h3>
-                <p>Collection exclusive de bijoux élégants — colliers, bracelets, boucles d'oreilles.</p>
+                <span class="service-icon">🧒</span>
+                <h3>Coiffure Enfants</h3>
+                <p>Coupes, tresses et nattes pour filles et garçons dans un cadre doux et adapté.</p>
                 <div class="service-price">À partir de 3 000 FCFA</div>
+            </div>
+            <div class="service-card">
+                <span class="service-icon">💅</span>
+                <h3>Manucure & Pédicure</h3>
+                <p>Pose de vernis, gel, faux ongles et soin des pieds. Des mains et pieds parfaits.</p>
+                <div class="service-price">À partir de 5 000 FCFA</div>
             </div>
             <div class="service-card">
                 <span class="service-icon">👱‍♀️</span>
                 <h3>Perruques</h3>
                 <p>Perruques naturelles et synthétiques de haute qualité pour changer de look.</p>
                 <div class="service-price">À partir de 25 000 FCFA</div>
+            </div>
+            <div class="service-card">
+                <span class="service-icon">✨</span>
+                <h3>Entretien Perruques</h3>
+                <p>Votre perruque a perdu de l'éclat ? On la remet à neuf — lavage, coiffage, réparation.</p>
+                <div class="service-price">À partir de 8 000 FCFA</div>
             </div>
         </div>
     </div>
@@ -265,7 +347,7 @@
         <div class="two-col" style="align-items:center; gap: 60px;">
             <div>
                 <span style="font-size:.68rem;letter-spacing:3px;text-transform:uppercase;color:var(--brown);display:block;margin-bottom:16px;">✦ Pourquoi nous choisir</span>
-                <h2 style="margin-bottom:24px;">Un salon de confiance depuis plus de 10 ans</h2>
+                <h2 style="margin-bottom:24px;">Un salon de confiance, passionné depuis le premier jour</h2>
                 <p style="margin-bottom:40px;">Chez BeautyAffair, chaque client est unique. Nous combinons savoir-faire traditionnel et tendances modernes pour vous offrir le meilleur.</p>
                 <div style="display:flex;flex-direction:column;gap:28px;">
                     <div class="why-item">
