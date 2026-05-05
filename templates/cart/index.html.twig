@@ -143,10 +143,10 @@
                     <!-- Quantité -->
                     <form method="post" action="{{ path('app_cart_update', {id: p.id}) }}">
                         <div class="qty-control">
-                            <button type="submit" name="qty" value="{{ item.quantite - 1 }}" class="qty-btn">−</button>
+                            <button type="button" value="{{ item.quantite - 1 }}" class="qty-btn">−</button>
                             <input type="number" name="qty" value="{{ item.quantite }}" min="0" max="99"
                                    class="qty-input" onchange="this.form.submit()">
-                            <button type="submit" name="qty" value="{{ item.quantite + 1 }}" class="qty-btn">+</button>
+                            <button type="button" value="{{ item.quantite + 1 }}" class="qty-btn">+</button>
                         </div>
                     </form>
 

@@ -76,8 +76,7 @@ final class PaydunyaController extends AbstractController
     ): Response {
         $data = json_decode($request->getContent(), true);
 
-        $token      = $data['data']['invoice']['token']       ?? null;
-        $statut     = $data['data']['invoice']['status']      ?? null;
+        $token      = $data['data']['invoice']['token']            ?? null;
         $commandeId = $data['data']['custom_data']['commande_id'] ?? null;
 
         if (!$token || !$commandeId) {

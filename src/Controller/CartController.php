@@ -9,9 +9,11 @@ use App\Service\EmailService;
 use App\Service\PaydunyaService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/panier', name: 'app_cart')]
@@ -31,6 +33,12 @@ final class CartController extends AbstractController
     {
         $qty = max(1, (int) $request->request->get('qty', 1));
         $cart->add($id, $qty);
+
+        if ($request->isXmlHttpRequest()) {
+            $count = array_sum($request->getSession()->get('cart', []));
+            return new JsonResponse(['success' => true, 'cartCount' => $count]);
+        }
+
         $this->addFlash('success', 'Article ajouté au panier.');
         return $this->redirect($request->headers->get('referer', $this->generateUrl('app_boutique')));
     }
@@ -89,9 +97,9 @@ final class CartController extends AbstractController
             if ($paydunya->isConfigured()) {
                 $result = $paydunya->createInvoice(
                     $commande,
-                    $this->generateUrl('app_paiement_retour', ['id' => $commande->getId()], 0),
-                    $this->generateUrl('app_paiement_annule', ['id' => $commande->getId()], 0),
-                    $this->generateUrl('app_paiement_webhook', [], 0),
+                    $this->generateUrl('app_paiement_retour', ['id' => $commande->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                    $this->generateUrl('app_paiement_annule', ['id' => $commande->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                    $this->generateUrl('app_paiement_webhook', [], UrlGeneratorInterface::ABSOLUTE_URL),
                 );
 
                 if (isset($result['invoice_url'])) {
@@ -100,8 +108,8 @@ final class CartController extends AbstractController
                     return $this->redirect($result['invoice_url']);
                 }
 
-                // Échec appel API PayDunya → on affiche quand même la page de paiement
-                $this->addFlash('warning', 'Problème de connexion PayDunya. Payez via le bouton ci-dessous.');
+                $erreur = $result['error'] ?? 'Erreur inconnue';
+                $this->addFlash('danger', 'PayDunya : ' . $erreur);
             }
 
             // 3. Pas encore configuré ou erreur → page de paiement avec simulation

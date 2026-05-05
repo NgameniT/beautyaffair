@@ -56,12 +56,14 @@ class PaydunyaService
                 'json' => [
                     'invoice' => [
                         'total_amount' => (int) $commande->getTotal(),
-                        'description'  => 'Commande BeautyAffair #' . $commande->getId(),
+                        'description'  => 'Commande #' . $commande->getId() . ' — BeautyAffair',
                     ],
                     'store' => [
                         'name'           => 'BeautyAffair',
-                        'tagline'        => 'Salon de beauté & Boutique',
+                        'tagline'        => 'Salon de beauté & Boutique — Cotonou, Bénin',
                         'postal_address' => 'Cotonou, Bénin',
+                        'phone'          => '+229 00 00 00 00',
+                        'website_url'    => 'http://127.0.0.1:8000',
                     ],
                     'actions' => [
                         'cancel_url'   => $cancelUrl,
@@ -77,15 +79,41 @@ class PaydunyaService
             $data = $response->toArray(false);
 
             if (($data['response_code'] ?? '') !== '00') {
-                return ['error' => $data['response_text'] ?? 'Erreur PayDunya'];
+                return ['error' => $data['description'] ?? $data['response_text'] ?? 'Erreur PayDunya'];
             }
 
             return [
                 'token'       => $data['token'],
-                'invoice_url' => $data['invoice_url'],
+                'invoice_url' => $data['response_text'],
             ];
         } catch (\Throwable $e) {
             return ['error' => 'Impossible de joindre PayDunya : ' . $e->getMessage()];
+        }
+    }
+
+    public function debugRawResponse(string $returnUrl, string $cancelUrl, string $callbackUrl): array
+    {
+        try {
+            $response = $this->http->request('POST', $this->baseUrl() . '/checkout-invoice/create', [
+                'headers' => $this->headers(),
+                'json' => [
+                    'invoice' => [
+                        'total_amount' => 1000,
+                        'description'  => 'Test debug BeautyAffair',
+                    ],
+                    'store' => [
+                        'name' => 'BeautyAffair',
+                    ],
+                    'actions' => [
+                        'cancel_url'   => $cancelUrl,
+                        'return_url'   => $returnUrl,
+                        'callback_url' => $callbackUrl,
+                    ],
+                ],
+            ]);
+            return $response->toArray(false);
+        } catch (\Throwable $e) {
+            return ['exception' => $e->getMessage()];
         }
     }
 
