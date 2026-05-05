@@ -1,0 +1,130 @@
+{% extends 'base.html.twig' %}
+{% block title %}Finaliser la commande · BeautyAffair{% endblock %}
+
+{% block stylesheets %}
+<style>
+.page-header { background:linear-gradient(135deg,var(--brown-dark) 0%,#5C2F0E 100%); padding:52px 0 40px; text-align:center; position:relative; overflow:hidden; }
+.page-header::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 100%,rgba(196,147,63,.15) 0%,transparent 65%); }
+.page-header .container { position:relative; z-index:1; }
+.page-header h1 { color:var(--cream); margin-bottom:8px; }
+.page-header p  { color:var(--beige-dark); }
+
+.order-layout {
+    display: grid; grid-template-columns: 1fr 360px;
+    gap: 28px; padding: 48px 0 80px; align-items: start;
+}
+.order-form-card {
+    background: var(--white); border: 1px solid var(--beige);
+    border-radius: 10px; padding: 32px 36px;
+}
+.order-form-card h2 { color:var(--brown-dark); font-size:1.4rem; margin-bottom:6px; }
+.order-form-card > p { color:var(--text-soft); margin-bottom:28px; font-size:.9rem; }
+
+.order-recap {
+    background: var(--white); border: 1px solid var(--beige);
+    border-radius: 10px; padding: 24px;
+    position: sticky; top: 90px;
+}
+.order-recap h3 { color:var(--brown-dark); margin-bottom:16px; font-size:1.1rem; }
+.recap-line { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--beige); font-size:.875rem; }
+.recap-line:last-of-type { border-bottom:none; }
+.recap-line .name { color:var(--text-soft); }
+.recap-line .qty  { font-size:.75rem; color:var(--text-muted); margin-left:4px; }
+.recap-line .price { color:var(--brown); font-weight:500; }
+.recap-total { display:flex; justify-content:space-between; padding:14px 0 0; font-weight:600; font-size:1rem; border-top:2px solid var(--beige); margin-top:6px; }
+.recap-total .label { color:var(--brown-dark); }
+.recap-total .val   { color:var(--brown); }
+
+.payment-methods { margin-top:24px; }
+.payment-methods p { font-size:.78rem; color:var(--text-muted); margin-bottom:10px; text-transform:uppercase; letter-spacing:1px; }
+.payment-icons { display:flex; gap:8px; flex-wrap:wrap; }
+.payment-icon { background:var(--cream-soft); border:1px solid var(--beige-dark); border-radius:6px; padding:6px 12px; font-size:.8rem; color:var(--text-soft); }
+
+@media (max-width: 900px) { .order-layout { grid-template-columns: 1fr; } .order-recap { position:static; } }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="page-header">
+    <div class="container">
+        <h1>Finaliser la commande</h1>
+        <p style="color:var(--beige-dark);">Dernière étape avant la livraison</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="order-layout">
+
+        <!-- FORMULAIRE -->
+        <div class="order-form-card">
+            <h2>Informations de livraison</h2>
+            <p>Nous vous contacterons après validation pour confirmer la livraison et le paiement.</p>
+
+            <form method="post" action="{{ path('app_cart_order') }}">
+
+                <div class="field">
+                    <label for="adresse">Adresse de livraison</label>
+                    <input type="text" id="adresse" name="adresse" required
+                           value="{{ app.user.prenom }} {{ app.user.nom }}"
+                           placeholder="Quartier, rue, numéro — Cotonou">
+                </div>
+
+                <div class="field">
+                    <label for="telephone">Numéro de téléphone</label>
+                    <input type="tel" id="telephone" name="telephone" required
+                           placeholder="+229 XX XX XX XX">
+                </div>
+
+                <div class="field">
+                    <label>Mode de paiement</label>
+                    <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px;">
+                        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:12px 16px;border:1px solid var(--beige-dark);border-radius:6px;">
+                            <input type="radio" name="paiement" value="mtn" checked> 📱 MTN Mobile Money
+                        </label>
+                        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:12px 16px;border:1px solid var(--beige-dark);border-radius:6px;">
+                            <input type="radio" name="paiement" value="moov"> 📱 Moov Money
+                        </label>
+                        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:12px 16px;border:1px solid var(--beige-dark);border-radius:6px;">
+                            <input type="radio" name="paiement" value="card"> 💳 Carte bancaire
+                        </label>
+                    </div>
+                </div>
+
+                <div style="margin-top:28px;">
+                    <button type="submit" class="btn" style="width:100%;justify-content:center;padding:15px;font-size:.85rem;">
+                        Confirmer la commande — {{ total|number_format(0,',',' ') }} FCFA
+                    </button>
+                    <p style="font-size:.78rem;color:var(--text-muted);text-align:center;margin-top:10px;">
+                        En confirmant, vous acceptez nos conditions de vente.
+                    </p>
+                </div>
+            </form>
+        </div>
+
+        <!-- RÉCAPITULATIF -->
+        <div class="order-recap">
+            <h3>Récapitulatif</h3>
+            {% for item in items %}
+            <div class="recap-line">
+                <span class="name">{{ item.produit.nom }}<span class="qty">×{{ item.quantite }}</span></span>
+                <span class="price">{{ item.sous_total|number_format(0,',',' ') }} FCFA</span>
+            </div>
+            {% endfor %}
+            <div class="recap-total">
+                <span class="label">Total</span>
+                <span class="val">{{ total|number_format(0,',',' ') }} FCFA</span>
+            </div>
+
+            <div class="payment-methods">
+                <p>Paiements acceptés</p>
+                <div class="payment-icons">
+                    <span class="payment-icon">MTN Money</span>
+                    <span class="payment-icon">Moov Money</span>
+                    <span class="payment-icon">Visa / MC</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

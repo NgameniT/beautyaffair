@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+{% block title %}Politique de confidentialité · BeautyAffair{% endblock %}
+
+{% block body %}
+<div style="max-width:780px;margin:0 auto;padding:56px 24px;">
+
+    <div style="margin-bottom:40px;">
+        <span style="font-size:.68rem;letter-spacing:3px;text-transform:uppercase;color:var(--brown);display:block;margin-bottom:12px;">✦ Vos données</span>
+        <h1 style="font-size:2.4rem;color:var(--brown-dark);margin-bottom:8px;">Politique de confidentialité</h1>
+        <div class="gold-line gold-line-left"></div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:36px;">
+
+        <section>
+            <h2 style="font-size:1.2rem;color:var(--brown-dark);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--beige);">Données collectées</h2>
+            <p>Lors de votre utilisation de BeautyAffair, nous collectons uniquement les données nécessaires au fonctionnement du service :</p>
+            <ul style="margin-top:12px;padding-left:20px;display:flex;flex-direction:column;gap:6px;">
+                <li style="color:var(--text-soft);font-size:.9rem;"><strong style="color:var(--brown-dark);">Nom et prénom</strong> — pour personnaliser votre expérience et vos rendez-vous.</li>
+                <li style="color:var(--text-soft);font-size:.9rem;"><strong style="color:var(--brown-dark);">Adresse email</strong> — pour votre compte et les notifications de rendez-vous.</li>
+                <li style="color:var(--text-soft);font-size:.9rem;"><strong style="color:var(--brown-dark);">Historique de commandes</strong> — pour le suivi de vos achats en boutique.</li>
+                <li style="color:var(--text-soft);font-size:.9rem;"><strong style="color:var(--brown-dark);">Rendez-vous</strong> — date, heure et prestation choisie.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 style="font-size:1.2rem;color:var(--brown-dark);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--beige);">Utilisation des données</h2>
+            <p>Vos données sont utilisées exclusivement pour :</p>
+            <ul style="margin-top:12px;padding-left:20px;display:flex;flex-direction:column;gap:6px;">
+                <li style="color:var(--text-soft);font-size:.9rem;">Gérer votre compte et vos réservations</li>
+                <li style="color:var(--text-soft);font-size:.9rem;">Traiter vos commandes et vous envoyer les confirmations</li>
+                <li style="color:var(--text-soft);font-size:.9rem;">Vous contacter en cas de modification de rendez-vous</li>
+            </ul>
+            <p style="margin-top:12px;">Nous ne vendons, ne louons et ne partageons jamais vos données personnelles avec des tiers à des fins commerciales.</p>
+        </section>
+
+        <section>
+            <h2 style="font-size:1.2rem;color:var(--brown-dark);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--beige);">Conservation des données</h2>
+            <p>
+                Vos données sont conservées le temps de la relation commerciale et supprimées à votre demande. Les données de transaction sont conservées conformément aux obligations légales en vigueur au Bénin.
+            </p>
+        </section>
+
+        <section>
+            <h2 style="font-size:1.2rem;color:var(--brown-dark);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--beige);">Sécurité</h2>
+            <p>
+                Vos mots de passe sont chiffrés (bcrypt) et ne sont jamais stockés en clair. La connexion à notre base de données est chiffrée via SSL. Nous utilisons les meilleures pratiques de sécurité web pour protéger vos informations.
+            </p>
+        </section>
+
+        <section>
+            <h2 style="font-size:1.2rem;color:var(--brown-dark);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--beige);">Vos droits</h2>
+            <p>Vous disposez des droits suivants sur vos données :</p>
+            <ul style="margin-top:12px;padding-left:20px;display:flex;flex-direction:column;gap:6px;">
+                <li style="color:var(--text-soft);font-size:.9rem;"><strong style="color:var(--brown-dark);">Droit d'accès</strong> — consulter vos données depuis votre <a href="{{ path('app_profile') }}" style="color:var(--brown);">profil</a>.</li>
+                <li style="color:var(--text-soft);font-size:.9rem;"><strong style="color:var(--brown-dark);">Droit de rectification</strong> — modifier vos informations depuis votre profil.</li>
+                <li style="color:var(--text-soft);font-size:.9rem;"><strong style="color:var(--brown-dark);">Droit à l'effacement</strong> — demander la suppression de votre compte par email.</li>
+            </ul>
+            <p style="margin-top:12px;">Pour exercer ces droits, <a href="{{ path('app_contact') }}" style="color:var(--brown);text-decoration:underline;">contactez-nous</a>.</p>
+        </section>
+
+        <section>
+            <h2 style="font-size:1.2rem;color:var(--brown-dark);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--beige);">Cookies</h2>
+            <p>
+                Ce site utilise uniquement des cookies de session indispensables au fonctionnement (gestion du panier, authentification). Aucun cookie de traçage ou publicitaire n'est utilisé.
+            </p>
+        </section>
+
+    </div>
+
+    <p style="margin-top:48px;font-size:.78rem;color:var(--text-muted);text-align:center;">
+        Dernière mise à jour : {{ "now"|date("d/m/Y") }}
+    </p>
+
+</div>
+{% endblock %}

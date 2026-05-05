@@ -1,0 +1,161 @@
+{% extends 'base.html.twig' %}
+{% block title %}Recherche "{{ q }}" · BeautyAffair{% endblock %}
+
+{% block stylesheets %}
+<style>
+.search-page { padding: 56px 0 80px; }
+.search-bar-wrap {
+    background: var(--brown-dark);
+    padding: 40px 0;
+}
+.search-bar-inner {
+    max-width: 640px; margin: 0 auto; padding: 0 24px;
+}
+.search-bar-inner form {
+    display: flex; background: var(--white);
+    border-radius: 8px; overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,.2);
+}
+.search-bar-inner input {
+    flex: 1; padding: 16px 20px; border: none;
+    font-size: 1rem; font-family: 'Jost', sans-serif;
+    color: var(--text); outline: none;
+}
+.search-bar-inner button {
+    padding: 0 24px; background: var(--brown);
+    border: none; cursor: pointer; color: var(--white);
+    font-size: .85rem; font-weight: 500;
+    letter-spacing: 1px; text-transform: uppercase;
+    font-family: 'Jost', sans-serif;
+    transition: var(--ease);
+}
+.search-bar-inner button:hover { background: var(--brown-dark); }
+
+.result-section { margin-bottom: 48px; }
+.result-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px;
+}
+.result-header h2 { color: var(--brown-dark); font-size: 1.3rem; }
+.result-count {
+    background: rgba(125,78,45,.1); color: var(--brown);
+    border-radius: 20px; padding: 3px 10px;
+    font-size: .75rem; font-weight: 500;
+}
+
+.result-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.result-card {
+    background: var(--white); border: 1px solid var(--beige);
+    border-radius: 8px; padding: 20px;
+    transition: all .25s ease; text-decoration: none; display: block;
+}
+.result-card:hover {
+    border-color: var(--brown-light);
+    box-shadow: 0 6px 20px rgba(125,78,45,.1);
+    transform: translateY(-3px);
+}
+.result-card .cat  { font-size: .7rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+.result-card h4    { color: var(--brown-dark); font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; margin-bottom: 6px; }
+.result-card p     { font-size: .83rem; color: var(--text-soft); margin-bottom: 10px; line-height: 1.5; }
+.result-card .prix { color: var(--brown); font-weight: 500; font-size: .9rem; }
+.result-card .tag  {
+    display: inline-block; font-size: .65rem; letter-spacing: 1px;
+    text-transform: uppercase; padding: 2px 8px; border-radius: 3px;
+    background: rgba(125,78,45,.08); color: var(--brown); margin-bottom: 8px;
+}
+
+.no-result { text-align: center; padding: 60px 24px; }
+.no-result .ico { font-size: 3.5rem; margin-bottom: 16px; }
+.no-result h3 { color: var(--brown-dark); margin-bottom: 10px; }
+.no-result p  { color: var(--text-soft); }
+
+@media (max-width: 900px) { .result-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .result-grid { grid-template-columns: 1fr; } }
+</style>
+{% endblock %}
+
+{% block body %}
+
+<!-- BARRE DE RECHERCHE -->
+<div class="search-bar-wrap">
+    <div class="search-bar-inner">
+        <form action="{{ path('app_search') }}" method="get">
+            <input type="search" name="q" value="{{ q }}" placeholder="Rechercher…" autofocus>
+            <button type="submit">Rechercher</button>
+        </form>
+    </div>
+</div>
+
+<div class="search-page">
+    <div class="container">
+
+        {% if q|length < 2 %}
+            <div class="no-result">
+                <div class="ico">🔍</div>
+                <h3>Tapez votre recherche</h3>
+                <p>Entrez au moins 2 caractères pour rechercher un service, une perruque ou un bijou.</p>
+            </div>
+
+        {% elseif produits is empty and prestations is empty %}
+            <div class="no-result">
+                <div class="ico">😕</div>
+                <h3>Aucun résultat pour "{{ q }}"</h3>
+                <p>Essayez d'autres mots-clés, ou parcourez nos catégories.</p>
+                <div style="display:flex;gap:12px;justify-content:center;margin-top:28px;flex-wrap:wrap;">
+                    <a href="{{ path('app_service') }}" class="btn">Voir les services</a>
+                    <a href="{{ path('app_boutique') }}" class="btn-outline">Voir la boutique</a>
+                </div>
+            </div>
+
+        {% else %}
+            <p style="color:var(--text-muted);margin-bottom:36px;font-size:.9rem;">
+                {{ (produits|length + prestations|length) }} résultat(s) pour <strong style="color:var(--brown-dark);">"{{ q }}"</strong>
+            </p>
+
+            {# PRESTATIONS #}
+            {% if prestations is not empty %}
+            <div class="result-section">
+                <div class="result-header">
+                    <h2>Services de coiffure</h2>
+                    <span class="result-count">{{ prestations|length }}</span>
+                </div>
+                <div class="result-grid">
+                    {% for p in prestations %}
+                    <a href="{{ path('app_service') }}" class="result-card">
+                        <div class="tag">{{ p.categorie.nom }}</div>
+                        <h4>{{ p.nom }}</h4>
+                        <div class="prix">{{ p.prix|number_format(0,',',' ') }} FCFA · {{ p.duree }} min</div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            {# PRODUITS #}
+            {% if produits is not empty %}
+            <div class="result-section">
+                <div class="result-header">
+                    <h2>Boutique</h2>
+                    <span class="result-count">{{ produits|length }}</span>
+                </div>
+                <div class="result-grid">
+                    {% for p in produits %}
+                    <a href="{{ path('app_boutique_show', {id: p.id}) }}" class="result-card">
+                        <div class="cat">{{ p.categorie.nom }}</div>
+                        <h4>{{ p.nom }}</h4>
+                        {% if p.description %}
+                            <p>{{ p.description|slice(0,80) }}…</p>
+                        {% endif %}
+                        <div class="prix">{{ p.prix|number_format(0,',',' ') }} FCFA</div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}

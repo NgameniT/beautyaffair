@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#F5EDE0;font-family:'Helvetica Neue',Arial,sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#F5EDE0;padding:40px 20px;">
+<tr><td align="center">
+<table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
+
+  <!-- HEADER -->
+  <tr><td style="background:#3D1F0D;border-radius:10px 10px 0 0;padding:32px 40px;text-align:center;">
+    <div style="font-family:Georgia,serif;font-size:1.6rem;font-weight:700;color:#FDF8F3;letter-spacing:1px;">Beauty<span style="color:#C4933F;">Affair</span></div>
+    <div style="font-size:.75rem;letter-spacing:3px;text-transform:uppercase;color:#D4C0A5;margin-top:6px;">Salon de beauté · Cotonou, Bénin</div>
+  </td></tr>
+
+  <!-- BODY -->
+  <tr><td style="background:#FFFFFF;padding:36px 40px;">
+
+    <h1 style="font-family:Georgia,serif;font-size:1.5rem;color:#3D1F0D;margin:0 0 8px;">Rendez-vous enregistré ✓</h1>
+    <p style="color:#6B4C3B;font-size:.9rem;margin:0 0 28px;line-height:1.7;">
+        Bonjour <strong>{{ rdv.client.prenom }}</strong>, votre demande de rendez-vous a bien été reçue. Voici le récapitulatif :
+    </p>
+
+    <!-- DÉTAILS -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#FDF8F3;border:1px solid #EDE0CE;border-radius:8px;margin-bottom:28px;">
+      <tr><td style="padding:20px 24px;border-bottom:1px solid #EDE0CE;">
+        <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:1.5px;color:#9B7B68;margin-bottom:4px;">Prestation</div>
+        <div style="font-size:1rem;color:#3D1F0D;font-weight:600;">{{ rdv.prestation.nom }}</div>
+      </td></tr>
+      <tr><td style="padding:20px 24px;border-bottom:1px solid #EDE0CE;">
+        <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:1.5px;color:#9B7B68;margin-bottom:4px;">Date & heure</div>
+        <div style="font-size:1rem;color:#3D1F0D;font-weight:600;">{{ rdv.dateHeure|date('d/m/Y') }} à {{ rdv.dateHeure|date('H:i') }}</div>
+      </td></tr>
+      <tr><td style="padding:20px 24px;border-bottom:1px solid #EDE0CE;">
+        <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:1.5px;color:#9B7B68;margin-bottom:4px;">Prix</div>
+        <div style="font-size:1rem;color:#7D4E2D;font-weight:600;">{{ rdv.prestation.prix|number_format(0,',',' ') }} FCFA</div>
+      </td></tr>
+      {% if rdv.notes %}
+      <tr><td style="padding:20px 24px;">
+        <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:1.5px;color:#9B7B68;margin-bottom:4px;">Notes</div>
+        <div style="font-size:.9rem;color:#6B4C3B;">{{ rdv.notes }}</div>
+      </td></tr>
+      {% endif %}
+    </table>
+
+    <div style="background:rgba(196,147,63,.1);border:1px solid rgba(196,147,63,.3);border-radius:8px;padding:16px 20px;margin-bottom:28px;">
+      <p style="color:#92400e;font-size:.85rem;margin:0;line-height:1.6;">
+        ⏳ Votre rendez-vous est <strong>en attente de confirmation</strong>. Nous vous contacterons rapidement pour valider votre créneau.
+      </p>
+    </div>
+
+    <p style="color:#6B4C3B;font-size:.88rem;line-height:1.7;margin:0;">
+        Pour toute question, répondez à cet email ou contactez-nous directement.<br>
+        À très bientôt chez BeautyAffair !
+    </p>
+
+  </td></tr>
+
+  <!-- FOOTER -->
+  <tr><td style="background:#3D1F0D;border-radius:0 0 10px 10px;padding:20px 40px;text-align:center;">
+    <p style="color:#D4C0A5;font-size:.78rem;margin:0;">© {{ "now"|date("Y") }} BeautyAffair · Cotonou, Bénin</p>
+  </td></tr>
+
+</table>
+</td></tr>
+</table>
+
+</body>
+</html>

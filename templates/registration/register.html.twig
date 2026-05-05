@@ -1,35 +1,62 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Inscription | BiblioConnect{% endblock %}
+{% block title %}Inscription · BeautyAffair{% endblock %}
 
-{% block body %}
+{% block stylesheets %}
 <style>
 .auth-wrap {
     display: flex; align-items: center; justify-content: center;
-    min-height: calc(100vh - 62px - 80px); padding: 40px 0;
+    min-height: calc(100vh - 70px - 80px); padding: 40px 16px;
+    background: var(--cream-soft);
 }
 .auth-card {
-    width: 100%; max-width: 480px;
-    background: var(--white); border: 1px solid var(--g200);
-    border-radius: 18px; box-shadow: var(--shadow); overflow: hidden;
+    width: 100%; max-width: 500px;
+    background: var(--white); border: 1px solid var(--beige);
+    border-radius: 14px; box-shadow: 0 8px 32px rgba(125,78,45,.08); overflow: hidden;
 }
-.auth-header { padding: 34px 36px 22px; border-bottom: 1px solid var(--g100); }
-.auth-header h1 { font-size: 1.5rem; margin-bottom: 6px; }
-.auth-header p  { font-size: .875rem; color: var(--g500); }
-.auth-body { padding: 26px 36px 34px; }
+.auth-header {
+    padding: 34px 36px 22px;
+    border-bottom: 1px solid var(--beige);
+    background: linear-gradient(135deg, var(--brown-dark) 0%, #5C2F0E 100%);
+}
+.auth-header h1 { font-size: 1.5rem; color: var(--cream); margin-bottom: 6px; }
+.auth-header p  { font-size: .875rem; color: var(--beige-dark); }
+.auth-body { padding: 28px 36px 34px; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-@media (max-width:480px) { .form-row { grid-template-columns: 1fr; } .auth-header,.auth-body { padding-left: 22px; padding-right: 22px; } }
+
+.pw-wrap {
+    position: relative;
+}
+.pw-wrap input {
+    padding-right: 44px !important;
+}
+.pw-eye {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer; padding: 4px;
+    color: var(--text-muted); display: flex; align-items: center;
+    transition: color .2s;
+}
+.pw-eye:hover { color: var(--brown); }
+.pw-eye svg { width: 18px; height: 18px; }
+
+@media (max-width: 520px) {
+    .form-row { grid-template-columns: 1fr; }
+    .auth-header, .auth-body { padding-left: 20px; padding-right: 20px; }
+}
 </style>
+{% endblock %}
+
+{% block body %}
 <div class="auth-wrap">
 <div class="auth-card">
     <div class="auth-header">
         <h1>Créer un compte</h1>
-        <p>Rejoignez BiblioConnect et accédez à tout le catalogue.</p>
+        <p>Rejoignez BeautyAffair et accédez à tous nos services.</p>
     </div>
     <div class="auth-body">
 
         {% for flash_error in app.flashes('verify_email_error') %}
-            <div class="flash-msg flash-danger">{{ flash_error }}</div>
+            <div style="padding:10px 14px;border-radius:6px;margin-bottom:16px;font-size:.875rem;background:rgba(220,38,38,.08);color:#991b1b;border:1px solid rgba(220,38,38,.3);">{{ flash_error }}</div>
         {% endfor %}
 
         {{ form_start(registrationForm, {attr: {novalidate: 'novalidate'}}) }}
@@ -61,16 +88,32 @@
 
             <div class="field">
                 {{ form_label(registrationForm.plainPassword.first, 'Mot de passe') }}
-                {{ form_widget(registrationForm.plainPassword.first, {attr: {placeholder: '8 caractères minimum'}}) }}
+                <div class="pw-wrap">
+                    {{ form_widget(registrationForm.plainPassword.first, {attr: {placeholder: '8 caractères minimum', id: 'pw1'}}) }}
+                    <button type="button" class="pw-eye" onclick="togglePw('pw1', this)" title="Afficher/masquer">
+                        <svg id="pw1-eye" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                </div>
                 {% if form_errors(registrationForm.plainPassword.first)|length > 0 %}
                     <div class="field-error">{{ form_errors(registrationForm.plainPassword.first) }}</div>
                 {% endif %}
-                <div style="font-size:.74rem;color:var(--g400);margin-top:4px;">Majuscule, minuscule et chiffre requis.</div>
+                <div style="font-size:.74rem;color:var(--text-muted);margin-top:4px;">Majuscule, minuscule et chiffre requis.</div>
             </div>
 
             <div class="field">
                 {{ form_label(registrationForm.plainPassword.second, 'Confirmer le mot de passe') }}
-                {{ form_widget(registrationForm.plainPassword.second, {attr: {placeholder: 'Répétez le mot de passe'}}) }}
+                <div class="pw-wrap">
+                    {{ form_widget(registrationForm.plainPassword.second, {attr: {placeholder: 'Répétez le mot de passe', id: 'pw2'}}) }}
+                    <button type="button" class="pw-eye" onclick="togglePw('pw2', this)" title="Afficher/masquer">
+                        <svg id="pw2-eye" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                </div>
                 {% if form_errors(registrationForm.plainPassword.second)|length > 0 or form_errors(registrationForm.plainPassword)|length > 0 %}
                     <div class="field-error">
                         {{ form_errors(registrationForm.plainPassword.second) }}
@@ -87,18 +130,32 @@
                 {% endif %}
             </div>
 
-            <button type="submit" class="btn" style="width:100%;justify-content:center;padding:11px;">
+            <button type="submit" class="btn" style="width:100%;justify-content:center;padding:12px;">
                 Créer mon compte
             </button>
 
         {{ form_end(registrationForm) }}
 
-        <div style="text-align:center;margin-top:20px;padding-top:18px;border-top:1px solid var(--g100);">
-            <p style="font-size:.82rem;">Déjà un compte ?
-                <a href="{{ path('app_login') }}" style="color:var(--g900);font-weight:600;text-decoration:none;"> Se connecter</a>
+        <div style="text-align:center;margin-top:20px;padding-top:18px;border-top:1px solid var(--beige);">
+            <p style="font-size:.82rem;color:var(--text-muted);">Déjà un compte ?
+                <a href="{{ path('app_login') }}" style="color:var(--brown);font-weight:600;text-decoration:none;">Se connecter</a>
             </p>
         </div>
     </div>
 </div>
 </div>
+
+<script>
+function togglePw(inputId, btn) {
+    var input = document.getElementById(inputId);
+    var svg = btn.querySelector('svg');
+    if (input.type === 'password') {
+        input.type = 'text';
+        svg.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
+    } else {
+        input.type = 'password';
+        svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+    }
+}
+</script>
 {% endblock %}

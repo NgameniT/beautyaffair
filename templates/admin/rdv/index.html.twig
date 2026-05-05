@@ -1,0 +1,94 @@
+{% extends 'admin/base_admin.html.twig' %}
+{% block title %}Rendez-vous · Admin{% endblock %}
+
+{% block admin_body %}
+
+<div class="admin-page-header">
+    <div>
+        <div class="admin-breadcrumb"><a href="{{ path('app_admin_dashboard') }}">Admin</a> / Rendez-vous</div>
+        <h1>Rendez-vous</h1>
+    </div>
+</div>
+
+<!-- FILTRES RAPIDES -->
+<div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
+    {% set all_statuts = {'en_attente':'⏳ En attente','confirme':'✅ Confirmés','annule':'❌ Annulés','termine':'✔ Terminés'} %}
+    <span style="font-size:.82rem;color:var(--text-muted);align-self:center;">{{ rdvs|length }} rendez-vous au total</span>
+</div>
+
+<div class="admin-table-wrap">
+    <div class="admin-table-header">
+        <h2>Tous les rendez-vous</h2>
+    </div>
+    {% if rdvs is empty %}
+        <p style="padding:40px;text-align:center;color:var(--text-muted);">Aucun rendez-vous enregistré.</p>
+    {% else %}
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Client</th>
+                <th>Prestation</th>
+                <th>Date & Heure</th>
+                <th>Durée</th>
+                <th>Prix</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rdv in rdvs %}
+            <tr>
+                <td style="color:var(--text-muted);font-size:.8rem;">{{ rdv.id }}</td>
+                <td>
+                    <strong style="color:var(--brown-dark);">{{ rdv.client.prenom }} {{ rdv.client.nom }}</strong><br>
+                    <small style="color:var(--text-muted);">{{ rdv.client.email }}</small>
+                </td>
+                <td>
+                    {{ rdv.prestation.nom }}<br>
+                    <small style="color:var(--text-muted);">{{ rdv.prestation.categorie.nom }}</small>
+                </td>
+                <td>
+                    <strong>{{ rdv.dateHeure|date('d/m/Y') }}</strong><br>
+                    <small>{{ rdv.dateHeure|date('H:i') }}</small>
+                </td>
+                <td>{{ rdv.prestation.duree }} min</td>
+                <td style="color:var(--brown);font-weight:500;">{{ rdv.prestation.prix|number_format(0,',',' ') }} FCFA</td>
+                <td>
+                    {% if rdv.statut == 'en_attente' %}<span class="badge-pill badge-attente">⏳ En attente</span>
+                    {% elseif rdv.statut == 'confirme' %}<span class="badge-pill badge-confirme">✅ Confirmé</span>
+                    {% elseif rdv.statut == 'annule' %}<span class="badge-pill badge-annule">❌ Annulé</span>
+                    {% else %}<span class="badge-pill badge-termine">✔ Terminé</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="action-btns">
+                        {% if rdv.statut == 'en_attente' %}
+                            <form method="post" action="{{ path('app_admin_rdv_statut', {id: rdv.id, statut: 'confirme'}) }}">
+                                <button class="btn-sm btn-sm-success">Confirmer</button>
+                            </form>
+                            <form method="post" action="{{ path('app_admin_rdv_statut', {id: rdv.id, statut: 'annule'}) }}"
+                                  onsubmit="return confirm('Annuler ce RDV ?')">
+                                <button class="btn-sm btn-sm-danger">Annuler</button>
+                            </form>
+                        {% elseif rdv.statut == 'confirme' %}
+                            <form method="post" action="{{ path('app_admin_rdv_statut', {id: rdv.id, statut: 'termine'}) }}">
+                                <button class="btn-sm btn-sm-neutral">Marquer terminé</button>
+                            </form>
+                            <form method="post" action="{{ path('app_admin_rdv_statut', {id: rdv.id, statut: 'annule'}) }}"
+                                  onsubmit="return confirm('Annuler ce RDV ?')">
+                                <button class="btn-sm btn-sm-danger">Annuler</button>
+                            </form>
+                        {% else %}
+                            <span style="color:var(--text-muted);font-size:.8rem;">—</span>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+
+{% endblock %}

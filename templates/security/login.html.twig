@@ -1,36 +1,58 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Connexion | BiblioConnect{% endblock %}
+{% block title %}Connexion · BeautyAffair{% endblock %}
 
-{% block body %}
+{% block stylesheets %}
 <style>
 .auth-wrap {
     display: flex; align-items: center; justify-content: center;
-    min-height: calc(100vh - 62px - 80px); padding: 32px 0;
+    min-height: calc(100vh - 70px - 80px); padding: 40px 16px;
+    background: var(--cream-soft);
 }
 .auth-card {
     width: 100%; max-width: 420px;
-    background: var(--white); border: 1px solid var(--g200);
-    border-radius: 18px; box-shadow: var(--shadow); overflow: hidden;
+    background: var(--white); border: 1px solid var(--beige);
+    border-radius: 14px; box-shadow: 0 8px 32px rgba(125,78,45,.08); overflow: hidden;
 }
 .auth-header {
     padding: 36px 36px 24px;
-    border-bottom: 1px solid var(--g100);
+    border-bottom: 1px solid var(--beige);
+    background: linear-gradient(135deg, var(--brown-dark) 0%, #5C2F0E 100%);
 }
-.auth-header h1 { font-size: 1.5rem; margin-bottom: 6px; }
-.auth-header p { font-size: .875rem; color: var(--g500); }
+.auth-header h1 { font-size: 1.5rem; color: var(--cream); margin-bottom: 6px; }
+.auth-header p  { font-size: .875rem; color: var(--beige-dark); }
 .auth-body { padding: 28px 36px 36px; }
+
+.pw-wrap { position: relative; }
+.pw-wrap input { padding-right: 44px !important; }
+.pw-eye {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer; padding: 4px;
+    color: var(--text-muted); display: flex; align-items: center;
+    transition: color .2s;
+}
+.pw-eye:hover { color: var(--brown); }
+.pw-eye svg { width: 18px; height: 18px; }
+
+@media (max-width: 480px) {
+    .auth-header, .auth-body { padding-left: 20px; padding-right: 20px; }
+}
 </style>
+{% endblock %}
+
+{% block body %}
 <div class="auth-wrap">
 <div class="auth-card">
     <div class="auth-header">
         <h1>Connexion</h1>
-        <p>Accédez à votre espace personnel BiblioConnect.</p>
+        <p>Accédez à votre espace personnel BeautyAffair.</p>
     </div>
     <div class="auth-body">
 
         {% if error %}
-            <div class="flash-msg flash-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            <div style="padding:10px 14px;border-radius:6px;margin-bottom:16px;font-size:.875rem;background:rgba(220,38,38,.08);color:#991b1b;border:1px solid rgba(220,38,38,.3);">
+                {{ error.messageKey|trans(error.messageData, 'security') }}
+            </div>
         {% endif %}
 
         <form method="post">
@@ -43,24 +65,45 @@
 
             <div class="field">
                 <label for="inputPassword">Mot de passe</label>
-                <input type="password" id="inputPassword" name="password"
-                       placeholder="••••••••" required>
+                <div class="pw-wrap">
+                    <input type="password" id="inputPassword" name="password"
+                           placeholder="••••••••" required>
+                    <button type="button" class="pw-eye" onclick="togglePw()" title="Afficher/masquer">
+                        <svg id="pw-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
 
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-            <button class="btn" type="submit" style="width:100%;justify-content:center;padding:11px;margin-top:8px;">
+            <button class="btn" type="submit" style="width:100%;justify-content:center;padding:12px;margin-top:8px;">
                 Se connecter
             </button>
         </form>
 
-        <div style="text-align:center;margin-top:20px;padding-top:20px;border-top:1px solid var(--g100);">
-            <p style="font-size:.82rem;">Pas encore de compte ?
-                <a href="{{ path('app_register') }}" style="color:var(--g900);font-weight:600;text-decoration:none;"> Créer un compte</a>
+        <div style="text-align:center;margin-top:20px;padding-top:20px;border-top:1px solid var(--beige);">
+            <p style="font-size:.82rem;color:var(--text-muted);">Pas encore de compte ?
+                <a href="{{ path('app_register') }}" style="color:var(--brown);font-weight:600;text-decoration:none;">Créer un compte</a>
             </p>
         </div>
     </div>
 </div>
 </div>
-{% endblock %}
 
+<script>
+function togglePw() {
+    var input = document.getElementById('inputPassword');
+    var svg = document.getElementById('pw-icon');
+    if (input.type === 'password') {
+        input.type = 'text';
+        svg.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
+    } else {
+        input.type = 'password';
+        svg.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+    }
+}
+</script>
+{% endblock %}

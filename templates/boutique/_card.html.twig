@@ -1,0 +1,67 @@
+<div class="product-card">
+    {# Photo cliquable #}
+    <a href="{{ path('app_boutique_show', {id: produit.id}) }}" style="text-decoration:none;display:block;">
+        {% if produit.image %}
+            <div class="product-img" style="padding:0;">
+                <img src="/uploads/produits/{{ produit.image }}" alt="{{ produit.nom }}" style="width:100%;height:100%;object-fit:cover;">
+            </div>
+        {% else %}
+            <div class="product-img">{{ produit.categorie.icone ?? icone ?? '🛍️' }}</div>
+        {% endif %}
+    </a>
+
+    <div class="product-body">
+        <a href="{{ path('app_boutique_show', {id: produit.id}) }}" style="text-decoration:none;">
+            <h4 style="transition:color .2s;">{{ produit.nom }}</h4>
+        </a>
+        {% if produit.description %}
+            <p>{{ produit.description }}</p>
+        {% endif %}
+    </div>
+
+    <div class="product-footer">
+        <div>
+            <div class="product-price">{{ produit.prix|number_format(0,',',' ') }} FCFA</div>
+            {% if produit.stock == 0 %}
+                <span class="stock-badge none">Rupture</span>
+            {% elseif produit.stock <= 3 %}
+                <span class="stock-badge low">Plus que {{ produit.stock }}</span>
+            {% else %}
+                <span class="stock-badge">En stock</span>
+            {% endif %}
+        </div>
+
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end;">
+            {# Voir le détail #}
+            <a href="{{ path('app_boutique_show', {id: produit.id}) }}"
+               style="display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:4px;border:1px solid var(--beige-dark);background:var(--cream-soft);color:var(--text-soft);font-size:.72rem;font-weight:500;letter-spacing:1.2px;text-transform:uppercase;font-family:'Jost',sans-serif;text-decoration:none;transition:var(--ease);"
+               title="Voir le produit">
+                <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                Détails
+            </a>
+
+            {# Favoris #}
+            <button type="button" class="fav-btn {{ produit.id in favorisIds ? 'is-fav' : '' }}"
+                data-id="{{ produit.id }}"
+                data-url="{{ path('app_favoris_toggle', {id: produit.id}) }}"
+                title="{{ produit.id in favorisIds ? 'Retirer des favoris' : 'Ajouter aux favoris' }}">
+                <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </button>
+
+            {# Ajouter au panier #}
+            {% if produit.stock > 0 %}
+                <form class="add-cart-form" method="post" action="{{ path('app_cart_add', {id: produit.id}) }}">
+                    <input type="hidden" name="qty" value="1">
+                    <button type="submit">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                        Ajouter
+                    </button>
+                </form>
+            {% else %}
+                <button disabled style="padding:7px 16px;border-radius:4px;background:var(--beige);color:var(--text-muted);border:1px solid var(--beige-dark);font-size:.75rem;font-family:'Jost',sans-serif;letter-spacing:1.5px;text-transform:uppercase;">
+                    Indisponible
+                </button>
+            {% endif %}
+        </div>
+    </div>
+</div>

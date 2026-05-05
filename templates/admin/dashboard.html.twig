@@ -1,0 +1,97 @@
+{% extends 'admin/base_admin.html.twig' %}
+{% block title %}Tableau de bord · Admin{% endblock %}
+
+{% block admin_body %}
+
+<div class="admin-page-header">
+    <div>
+        <div class="admin-breadcrumb">Admin</div>
+        <h1>Tableau de bord</h1>
+    </div>
+    <span style="font-size:.82rem;color:var(--text-muted);">{{ "now"|date("d/m/Y") }}</span>
+</div>
+
+<!-- STATS -->
+<div class="stat-grid">
+    <div class="stat-card green">
+        <div class="label">RDV en attente</div>
+        <div class="value">{{ stats.rdv_en_attente }}</div>
+        <div class="sub">à confirmer</div>
+    </div>
+    <div class="stat-card accent">
+        <div class="label">RDV confirmés</div>
+        <div class="value">{{ stats.rdv_confirmes }}</div>
+        <div class="sub">à venir</div>
+    </div>
+    <div class="stat-card red">
+        <div class="label">Commandes</div>
+        <div class="value">{{ stats.commandes }}</div>
+        <div class="sub">en attente de paiement</div>
+    </div>
+    <div class="stat-card">
+        <div class="label">Clients inscrits</div>
+        <div class="value">{{ stats.total_clients }}</div>
+        <div class="sub">comptes actifs</div>
+    </div>
+</div>
+
+<!-- RDV RÉCENTS -->
+<div class="admin-table-wrap">
+    <div class="admin-table-header">
+        <h2>Derniers rendez-vous</h2>
+        <a href="{{ path('app_admin_rdv_list') }}" class="btn-sm btn-sm-neutral">Voir tout →</a>
+    </div>
+    {% if rdvs_recent is empty %}
+        <p style="padding:32px;text-align:center;color:var(--text-muted);">Aucun rendez-vous pour le moment.</p>
+    {% else %}
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Client</th>
+                <th>Prestation</th>
+                <th>Date & Heure</th>
+                <th>Statut</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rdv in rdvs_recent %}
+            <tr>
+                <td>
+                    <strong style="color:var(--brown-dark);">{{ rdv.client.prenom }} {{ rdv.client.nom }}</strong><br>
+                    <small style="color:var(--text-muted);">{{ rdv.client.email }}</small>
+                </td>
+                <td>{{ rdv.prestation.nom }}</td>
+                <td>{{ rdv.dateHeure|date('d/m/Y à H:i') }}</td>
+                <td>
+                    {% if rdv.statut == 'en_attente' %}
+                        <span class="badge-pill badge-attente">⏳ En attente</span>
+                    {% elseif rdv.statut == 'confirme' %}
+                        <span class="badge-pill badge-confirme">✅ Confirmé</span>
+                    {% elseif rdv.statut == 'annule' %}
+                        <span class="badge-pill badge-annule">❌ Annulé</span>
+                    {% else %}
+                        <span class="badge-pill badge-termine">✔ Terminé</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if rdv.statut == 'en_attente' %}
+                    <div class="action-btns">
+                        <form method="post" action="{{ path('app_admin_rdv_statut', {id: rdv.id, statut: 'confirme'}) }}">
+                            <button type="submit" class="btn-sm btn-sm-success">Confirmer</button>
+                        </form>
+                        <form method="post" action="{{ path('app_admin_rdv_statut', {id: rdv.id, statut: 'annule'}) }}"
+                              onsubmit="return confirm('Annuler ce RDV ?')">
+                            <button type="submit" class="btn-sm btn-sm-danger">Annuler</button>
+                        </form>
+                    </div>
+                    {% else %}—{% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+
+{% endblock %}

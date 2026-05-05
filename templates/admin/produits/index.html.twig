@@ -1,0 +1,92 @@
+{% extends 'admin/base_admin.html.twig' %}
+{% block title %}Produits · Admin{% endblock %}
+
+{% block admin_body %}
+
+<div class="admin-page-header">
+    <div>
+        <div class="admin-breadcrumb"><a href="{{ path('app_admin_dashboard') }}">Admin</a> / Produits</div>
+        <h1>Produits</h1>
+    </div>
+    <a href="{{ path('app_admin_produit_new') }}" class="btn-sm btn-sm-primary" style="padding:8px 18px;">+ Ajouter un produit</a>
+</div>
+
+<div class="admin-table-wrap">
+    <div class="admin-table-header">
+        <h2>{{ produits|length }} produits</h2>
+    </div>
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Produit</th>
+                <th>Catégorie</th>
+                <th>Prix</th>
+                <th>Stock</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for produit in produits %}
+            <tr>
+                <td style="color:var(--text-muted);font-size:.8rem;">{{ produit.id }}</td>
+                <td>
+                    <div style="display:flex;align-items:center;gap:12px;">
+                        <div style="width:44px;height:44px;flex-shrink:0;border-radius:6px;overflow:hidden;border:1px solid var(--beige);background:var(--cream-soft);display:flex;align-items:center;justify-content:center;font-size:1.4rem;">
+                            {% if produit.image %}
+                                <img src="/uploads/produits/{{ produit.image }}" alt="{{ produit.nom }}" style="width:100%;height:100%;object-fit:cover;">
+                            {% else %}
+                                {{ produit.categorie.icone ?? '🛍️' }}
+                            {% endif %}
+                        </div>
+                        <div>
+                            <strong style="color:var(--brown-dark);">{{ produit.nom }}</strong><br>
+                            {% if produit.description %}
+                                <small style="color:var(--text-muted);">{{ produit.description|slice(0,50) }}…</small>
+                            {% endif %}
+                        </div>
+                    </div>
+                </td>
+                <td>{{ produit.categorie.nom }}</td>
+                <td style="color:var(--brown);font-weight:500;white-space:nowrap;">
+                    {{ produit.prix|number_format(0,',',' ') }} FCFA
+                </td>
+                <td>
+                    {% if produit.stock == 0 %}
+                        <span style="color:#dc2626;font-weight:500;">0 — Rupture</span>
+                    {% elseif produit.stock <= 5 %}
+                        <span style="color:#d97706;font-weight:500;">{{ produit.stock }} — Faible</span>
+                    {% else %}
+                        <span style="color:#16a34a;">{{ produit.stock }}</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if produit.actif %}
+                        <span class="badge-pill badge-actif">● Actif</span>
+                    {% else %}
+                        <span class="badge-pill badge-inactif">○ Inactif</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="action-btns">
+                        <a href="{{ path('app_admin_produit_edit', {id: produit.id}) }}" class="btn-sm btn-sm-neutral">Modifier</a>
+                        <form method="post" action="{{ path('app_admin_produit_toggle', {id: produit.id}) }}">
+                            {% if produit.actif %}
+                                <button class="btn-sm btn-sm-danger">Désactiver</button>
+                            {% else %}
+                                <button class="btn-sm btn-sm-success">Activer</button>
+                            {% endif %}
+                        </form>
+                        <form method="post" action="{{ path('app_admin_produit_delete', {id: produit.id}) }}" onsubmit="return confirm('Supprimer ce produit ?')">
+                            <button class="btn-sm btn-sm-danger">Supprimer</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

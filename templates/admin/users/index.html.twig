@@ -1,0 +1,75 @@
+{% extends 'admin/base_admin.html.twig' %}
+{% block title %}Utilisateurs · Admin{% endblock %}
+
+{% block admin_body %}
+
+<div class="admin-page-header">
+    <div>
+        <div class="admin-breadcrumb"><a href="{{ path('app_admin_dashboard') }}">Admin</a> / Utilisateurs</div>
+        <h1>Utilisateurs</h1>
+    </div>
+</div>
+
+<div class="admin-table-wrap">
+    <div class="admin-table-header">
+        <h2>{{ users|length }} comptes</h2>
+    </div>
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>Rôle</th>
+                <th>Vérifié</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td style="color:var(--text-muted);font-size:.8rem;">{{ user.id }}</td>
+                <td>
+                    <strong style="color:var(--brown-dark);">{{ user.prenom }} {{ user.nom }}</strong>
+                    {% if user == app.user %}
+                        <span style="font-size:.7rem;color:var(--brown);margin-left:6px;">(vous)</span>
+                    {% endif %}
+                </td>
+                <td style="color:var(--text-soft);">{{ user.email }}</td>
+                <td>
+                    {% if 'ROLE_ADMIN' in user.roles %}
+                        <span class="badge-pill badge-admin">👑 Admin</span>
+                    {% else %}
+                        <span class="badge-pill badge-user">Client</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if user.isVerified %}
+                        <span style="color:#16a34a;">✔ Oui</span>
+                    {% else %}
+                        <span style="color:#dc2626;">✗ Non</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if user != app.user %}
+                    <div class="action-btns">
+                        <form method="post" action="{{ path('app_admin_user_toggle_admin', {id: user.id}) }}"
+                              onsubmit="return confirm('Modifier le rôle de {{ user.prenom }} {{ user.nom }} ?')">
+                            {% if 'ROLE_ADMIN' in user.roles %}
+                                <button class="btn-sm btn-sm-danger">Retirer admin</button>
+                            {% else %}
+                                <button class="btn-sm btn-sm-success">Passer admin</button>
+                            {% endif %}
+                        </form>
+                    </div>
+                    {% else %}
+                        <span style="color:var(--text-muted);font-size:.8rem;">—</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

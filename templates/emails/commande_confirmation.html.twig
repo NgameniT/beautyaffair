@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#F5EDE0;font-family:'Helvetica Neue',Arial,sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#F5EDE0;padding:40px 20px;">
+<tr><td align="center">
+<table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
+
+  <tr><td style="background:#3D1F0D;border-radius:10px 10px 0 0;padding:32px 40px;text-align:center;">
+    <div style="font-family:Georgia,serif;font-size:1.6rem;font-weight:700;color:#FDF8F3;letter-spacing:1px;">Beauty<span style="color:#C4933F;">Affair</span></div>
+    <div style="font-size:.75rem;letter-spacing:3px;text-transform:uppercase;color:#D4C0A5;margin-top:6px;">Boutique en ligne · Cotonou, Bénin</div>
+  </td></tr>
+
+  <tr><td style="background:#FFFFFF;padding:36px 40px;">
+
+    <h1 style="font-family:Georgia,serif;font-size:1.5rem;color:#3D1F0D;margin:0 0 8px;">Commande confirmée ✓</h1>
+    <p style="color:#6B4C3B;font-size:.9rem;margin:0 0 28px;line-height:1.7;">
+        Bonjour <strong>{{ commande.client.prenom }}</strong>, merci pour votre commande !<br>
+        Voici votre récapitulatif :
+    </p>
+
+    <!-- ARTICLES -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;">
+      <tr style="background:#FDF8F3;">
+        <td style="padding:10px 16px;font-size:.68rem;text-transform:uppercase;letter-spacing:1px;color:#9B7B68;border-bottom:2px solid #EDE0CE;">Article</td>
+        <td style="padding:10px 16px;font-size:.68rem;text-transform:uppercase;letter-spacing:1px;color:#9B7B68;border-bottom:2px solid #EDE0CE;text-align:center;">Qté</td>
+        <td style="padding:10px 16px;font-size:.68rem;text-transform:uppercase;letter-spacing:1px;color:#9B7B68;border-bottom:2px solid #EDE0CE;text-align:right;">Prix</td>
+      </tr>
+      {% for ligne in commande.lignes %}
+      <tr>
+        <td style="padding:12px 16px;font-size:.9rem;color:#3D1F0D;border-bottom:1px solid #F5EDE0;">{{ ligne.produit.nom }}</td>
+        <td style="padding:12px 16px;font-size:.9rem;color:#6B4C3B;border-bottom:1px solid #F5EDE0;text-align:center;">× {{ ligne.quantite }}</td>
+        <td style="padding:12px 16px;font-size:.9rem;color:#7D4E2D;font-weight:600;border-bottom:1px solid #F5EDE0;text-align:right;">{{ ligne.sousTotal|number_format(0,',',' ') }} FCFA</td>
+      </tr>
+      {% endfor %}
+      <tr style="background:#FDF8F3;">
+        <td colspan="2" style="padding:14px 16px;font-size:.85rem;font-weight:600;color:#3D1F0D;text-transform:uppercase;letter-spacing:.5px;">Total</td>
+        <td style="padding:14px 16px;font-size:1.05rem;font-weight:700;color:#7D4E2D;text-align:right;">{{ commande.total|number_format(0,',',' ') }} FCFA</td>
+      </tr>
+    </table>
+
+    <!-- LIVRAISON -->
+    {% if commande.adresseLivraison %}
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#FDF8F3;border:1px solid #EDE0CE;border-radius:8px;margin-bottom:24px;">
+      <tr><td style="padding:18px 24px;border-bottom:1px solid #EDE0CE;">
+        <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:1px;color:#9B7B68;margin-bottom:4px;">Adresse de livraison</div>
+        <div style="font-size:.9rem;color:#3D1F0D;">{{ commande.adresseLivraison }}</div>
+      </td></tr>
+      {% if commande.telephone %}
+      <tr><td style="padding:18px 24px;">
+        <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:1px;color:#9B7B68;margin-bottom:4px;">Téléphone</div>
+        <div style="font-size:.9rem;color:#3D1F0D;">{{ commande.telephone }}</div>
+      </td></tr>
+      {% endif %}
+    </table>
+    {% endif %}
+
+    <div style="background:rgba(22,163,74,.07);border:1px solid rgba(22,163,74,.25);border-radius:8px;padding:14px 18px;margin-bottom:24px;">
+      <p style="color:#166534;font-size:.85rem;margin:0;">
+        🚚 <strong>Livraison sous 24–48h</strong> après confirmation de la commande. Nous vous contacterons au {{ commande.telephone ?? 'numéro indiqué' }}.
+      </p>
+    </div>
+
+    <p style="color:#6B4C3B;font-size:.88rem;line-height:1.7;margin:0;">
+        Merci de votre confiance. À très bientôt !<br>
+        <strong>L'équipe BeautyAffair</strong>
+    </p>
+
+  </td></tr>
+
+  <tr><td style="background:#3D1F0D;border-radius:0 0 10px 10px;padding:20px 40px;text-align:center;">
+    <p style="color:#D4C0A5;font-size:.78rem;margin:0;">© {{ "now"|date("Y") }} BeautyAffair · Cotonou, Bénin</p>
+  </td></tr>
+
+</table>
+</td></tr>
+</table>
+
+</body>
+</html>

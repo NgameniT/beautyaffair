@@ -52,36 +52,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Length(min: 2, max: 255, minMessage: 'Le prenom doit contenir au moins {{ limit }} caracteres.')]
     private ?string $prenom = null;
 
-    /**
-     * @var Collection<int, BookLoan>
-     */
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: BookLoan::class, orphanRemoval: true)]
-    private Collection $bookLoans;
+    #[ORM\OneToMany(targetEntity: RendezVous::class, mappedBy: 'client')]
+    private Collection $rendezVous;
 
-    /**
-     * @var Collection<int, EventRegistration>
-     */
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: EventRegistration::class, orphanRemoval: true)]
-    private Collection $eventRegistrations;
-
-    /**
-     * @var Collection<int, BookFavorite>
-     */
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: BookFavorite::class, orphanRemoval: true)]
-    private Collection $bookFavorites;
-
-    /**
-     * @var Collection<int, BookReview>
-     */
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: BookReview::class, orphanRemoval: true)]
-    private Collection $bookReviews;
+    #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'client')]
+    private Collection $commandes;
 
     public function __construct()
     {
-        $this->bookLoans = new ArrayCollection();
-        $this->eventRegistrations = new ArrayCollection();
-        $this->bookFavorites = new ArrayCollection();
-        $this->bookReviews = new ArrayCollection();
+        $this->rendezVous = new ArrayCollection();
+        $this->commandes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -200,11 +180,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return trim(($this->prenom ?? '').' '.($this->nom ?? ''));
     }
 
-    /**
-     * @return Collection<int, BookFavorite>
-     */
-    public function getBookFavorites(): Collection
-    {
-        return $this->bookFavorites;
-    }
+    /** @return Collection<int, RendezVous> */
+    public function getRendezVous(): Collection { return $this->rendezVous; }
+
+    /** @return Collection<int, Commande> */
+    public function getCommandes(): Collection { return $this->commandes; }
+
 }

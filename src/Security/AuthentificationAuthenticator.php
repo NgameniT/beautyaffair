@@ -61,7 +61,7 @@ class AuthentificationAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($this->urlGenerator->generate('app_librarian_dashboard'));
         }
 
-        return new RedirectResponse($this->urlGenerator->generate('app_dashboard'));
+        return new RedirectResponse($this->urlGenerator->generate('app_home'));
     }
 
     protected function getLoginUrl(Request $request): string

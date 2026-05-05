@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#F5EDE0;font-family:'Helvetica Neue',Arial,sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#F5EDE0;padding:40px 20px;">
+<tr><td align="center">
+<table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
+
+  <tr><td style="background:#3D1F0D;border-radius:10px 10px 0 0;padding:32px 40px;text-align:center;">
+    <div style="font-family:Georgia,serif;font-size:1.6rem;font-weight:700;color:#FDF8F3;letter-spacing:1px;">Beauty<span style="color:#C4933F;">Affair</span></div>
+  </td></tr>
+
+  <tr><td style="background:#FFFFFF;padding:36px 40px;">
+
+    {% if rdv.statut == 'confirme' %}
+      <h1 style="font-family:Georgia,serif;font-size:1.5rem;color:#166534;margin:0 0 8px;">Rendez-vous confirmé ✓</h1>
+      <p style="color:#6B4C3B;font-size:.9rem;margin:0 0 28px;line-height:1.7;">
+          Bonjour <strong>{{ rdv.client.prenom }}</strong>, votre rendez-vous est <strong>confirmé</strong>. On vous attend !
+      </p>
+    {% elseif rdv.statut == 'annule' %}
+      <h1 style="font-family:Georgia,serif;font-size:1.5rem;color:#991b1b;margin:0 0 8px;">Rendez-vous annulé</h1>
+      <p style="color:#6B4C3B;font-size:.9rem;margin:0 0 28px;line-height:1.7;">
+          Bonjour <strong>{{ rdv.client.prenom }}</strong>, votre rendez-vous a été <strong>annulé</strong>. Contactez-nous pour replanifier.
+      </p>
+    {% else %}
+      <h1 style="font-family:Georgia,serif;font-size:1.5rem;color:#3D1F0D;margin:0 0 8px;">Mise à jour de votre rendez-vous</h1>
+      <p style="color:#6B4C3B;font-size:.9rem;margin:0 0 28px;line-height:1.7;">
+          Bonjour <strong>{{ rdv.client.prenom }}</strong>, voici l'état de votre rendez-vous.
+      </p>
+    {% endif %}
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#FDF8F3;border:1px solid #EDE0CE;border-radius:8px;margin-bottom:28px;">
+      <tr><td style="padding:18px 24px;border-bottom:1px solid #EDE0CE;">
+        <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:1.5px;color:#9B7B68;margin-bottom:4px;">Prestation</div>
+        <div style="font-size:1rem;color:#3D1F0D;font-weight:600;">{{ rdv.prestation.nom }}</div>
+      </td></tr>
+      <tr><td style="padding:18px 24px;">
+        <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:1.5px;color:#9B7B68;margin-bottom:4px;">Date & heure</div>
+        <div style="font-size:1rem;color:#3D1F0D;font-weight:600;">{{ rdv.dateHeure|date('d/m/Y') }} à {{ rdv.dateHeure|date('H:i') }}</div>
+      </td></tr>
+    </table>
+
+    <p style="color:#6B4C3B;font-size:.88rem;line-height:1.7;margin:0;">
+        Des questions ? Répondez à cet email, nous sommes là pour vous.<br>
+        À bientôt chez BeautyAffair !
+    </p>
+
+  </td></tr>
+
+  <tr><td style="background:#3D1F0D;border-radius:0 0 10px 10px;padding:20px 40px;text-align:center;">
+    <p style="color:#D4C0A5;font-size:.78rem;margin:0;">© {{ "now"|date("Y") }} BeautyAffair · Cotonou, Bénin</p>
+  </td></tr>
+
+</table>
+</td></tr>
+</table>
+
+</body>
+</html>

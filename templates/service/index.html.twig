@@ -1,0 +1,385 @@
+{% extends 'base.html.twig' %}
+{% block title %}Services Coiffure · BeautyAffair{% endblock %}
+
+{% block stylesheets %}
+<style>
+.page-header {
+    background: linear-gradient(135deg, var(--brown-dark) 0%, #5C2F0E 100%);
+    padding: 72px 0 56px;
+    text-align: center;
+    position: relative; overflow: hidden;
+}
+.page-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 100%, rgba(196,147,63,.15) 0%, transparent 65%);
+}
+.page-header .container { position: relative; z-index: 1; }
+.page-header .eyebrow {
+    font-size: .68rem; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--beige);
+    display: block; margin-bottom: 14px;
+}
+.page-header h1 { color: var(--cream); margin-bottom: 14px; }
+.page-header p { color: var(--beige-dark); max-width: 48ch; margin: 0 auto; }
+
+.section { padding: 80px 0; }
+.section-alt { background: var(--cream-soft); }
+.section-header { text-align: center; margin-bottom: 52px; }
+.section-header .eyebrow {
+    font-size: .68rem; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--brown);
+    display: block; margin-bottom: 14px;
+}
+.section-header h2 { color: var(--brown-dark); margin-bottom: 14px; }
+
+/* ── TARIFS ── */
+.prestation-card {
+    background: var(--white);
+    border: 1px solid var(--beige);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all .3s ease;
+}
+.prestation-card:hover {
+    border-color: var(--brown-light);
+    box-shadow: 0 12px 40px rgba(125,78,45,.12);
+    transform: translateY(-4px);
+}
+.prestation-header {
+    background: var(--cream-soft);
+    border-bottom: 1px solid var(--beige);
+    padding: 28px 24px;
+    display: flex; align-items: center; gap: 16px;
+}
+.prestation-header .icon { font-size: 2rem; }
+.prestation-header h3 { color: var(--brown-dark); margin: 0; }
+.prestation-header small { color: var(--text-muted); font-size: .78rem; }
+.prestation-list { padding: 20px 24px; list-style: none; }
+.prestation-list li {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--beige);
+    font-size: .9rem;
+}
+.prestation-list li:last-child { border-bottom: none; }
+.prestation-list .name { color: var(--text); }
+.prestation-list .price { color: var(--brown); font-weight: 500; font-size: .85rem; white-space: nowrap; }
+.prestation-footer { padding: 16px 24px; border-top: 1px solid var(--beige); text-align: center; }
+
+/* ── GALERIE RÉALISATIONS ── */
+.galerie-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+.galerie-card {
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    background: var(--white);
+    border: 1px solid var(--beige);
+    transition: all .3s ease;
+    cursor: pointer;
+}
+.galerie-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 48px rgba(125,78,45,.18);
+    border-color: var(--brown-light);
+}
+.galerie-photo {
+    height: 260px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.galerie-photo img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform .4s ease;
+}
+.galerie-card:hover .galerie-photo img { transform: scale(1.06); }
+
+/* Placeholder quand pas de vraie photo */
+.galerie-photo.placeholder {
+    font-size: 5rem;
+    flex-direction: column;
+    gap: 8px;
+}
+.galerie-photo.placeholder::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,.05);
+}
+
+/* Overlay au hover */
+.galerie-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(58,24,6,.85) 0%, transparent 55%);
+    opacity: 0;
+    transition: opacity .3s ease;
+    display: flex; align-items: flex-end;
+    padding: 20px;
+}
+.galerie-card:hover .galerie-overlay { opacity: 1; }
+.galerie-overlay-content { color: var(--cream); }
+.galerie-overlay-content .ov-name { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 600; display: block; margin-bottom: 2px; }
+.galerie-overlay-content .ov-price { font-size: .82rem; color: var(--gold); letter-spacing: 1px; }
+
+/* Infos sous la photo */
+.galerie-info {
+    padding: 14px 16px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid var(--beige);
+}
+.galerie-info .g-name { font-size: .92rem; color: var(--brown-dark); font-weight: 500; }
+.galerie-info .g-price {
+    font-size: .88rem; color: var(--brown); font-weight: 600;
+    background: rgba(125,78,45,.08); border-radius: 4px;
+    padding: 3px 10px;
+}
+
+/* Note upload */
+.upload-note {
+    text-align: center;
+    margin-top: 36px;
+    padding: 16px 24px;
+    background: rgba(196,147,63,.07);
+    border: 1px dashed var(--gold);
+    border-radius: 8px;
+    font-size: .82rem;
+    color: var(--text-muted);
+}
+.upload-note strong { color: var(--brown); }
+
+/* ── CTA RDV ── */
+.rdv-section {
+    background: var(--brown-dark);
+    padding: 80px 0; text-align: center;
+    position: relative; overflow: hidden;
+}
+.rdv-section::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(196,147,63,.1) 0%, transparent 70%);
+}
+.rdv-section .container { position: relative; z-index: 1; }
+.rdv-section h2 { color: var(--cream); margin-bottom: 14px; }
+.rdv-section p { color: var(--beige); margin-bottom: 36px; max-width: 50ch; margin-left: auto; margin-right: auto; }
+
+@media (max-width: 900px) { .galerie-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .galerie-grid { grid-template-columns: 1fr; } .galerie-photo { height: 220px; } }
+</style>
+{% endblock %}
+
+{% block body %}
+
+<div class="page-header">
+    <div class="container">
+        <span class="eyebrow">✦ Nos prestations</span>
+        <h1>Services de Coiffure</h1>
+        <p>Coiffure femme & homme par des experts passionnés. Réservez votre créneau en ligne.</p>
+    </div>
+</div>
+
+{# ── GRILLE TARIFAIRE ── #}
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <span class="eyebrow">✦ Tarifs</span>
+            <h2>Nos prestations</h2>
+            <div class="gold-line"></div>
+        </div>
+        <div class="two-col">
+
+            <div class="prestation-card">
+                <div class="prestation-header">
+                    <span class="icon">💇‍♀️</span>
+                    <div>
+                        <h3>Coiffure Femme</h3>
+                        <small>Styles modernes & traditionnels</small>
+                    </div>
+                </div>
+                <ul class="prestation-list">
+                    <li><span class="name">Coupe + Brushing</span><span class="price">15 000 FCFA</span></li>
+                    <li><span class="name">Tresses simples</span><span class="price">10 000 FCFA</span></li>
+                    <li><span class="name">Nattes collées</span><span class="price">20 000 FCFA</span></li>
+                    <li><span class="name">Coloration complète</span><span class="price">25 000 FCFA</span></li>
+                    <li><span class="name">Défrisage</span><span class="price">18 000 FCFA</span></li>
+                    <li><span class="name">Soin capillaire</span><span class="price">8 000 FCFA</span></li>
+                    <li><span class="name">Tissage / Extensions</span><span class="price">30 000 FCFA</span></li>
+                </ul>
+                <div class="prestation-footer">
+                    <a href="{{ path('app_rdv') }}" class="btn btn-xs">Réserver maintenant</a>
+                </div>
+            </div>
+
+            <div class="prestation-card">
+                <div class="prestation-header">
+                    <span class="icon">💇‍♂️</span>
+                    <div>
+                        <h3>Coiffure Homme</h3>
+                        <small>Coupes & soins masculins</small>
+                    </div>
+                </div>
+                <ul class="prestation-list">
+                    <li><span class="name">Coupe simple</span><span class="price">5 000 FCFA</span></li>
+                    <li><span class="name">Dégradé américain</span><span class="price">7 000 FCFA</span></li>
+                    <li><span class="name">Dégradé + barbe</span><span class="price">10 000 FCFA</span></li>
+                    <li><span class="name">Coupe + traits</span><span class="price">8 500 FCFA</span></li>
+                    <li><span class="name">Rasage à blanc</span><span class="price">4 000 FCFA</span></li>
+                    <li><span class="name">Taille de barbe seule</span><span class="price">3 000 FCFA</span></li>
+                    <li><span class="name">Soin & coloration</span><span class="price">12 000 FCFA</span></li>
+                </ul>
+                <div class="prestation-footer">
+                    <a href="{{ path('app_rdv') }}" class="btn btn-xs">Réserver maintenant</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{# ── GALERIE DES RÉALISATIONS ── #}
+<section class="section section-alt">
+    <div class="container">
+        <div class="section-header">
+            <span class="eyebrow">✦ Portfolio</span>
+            <h2>Nos réalisations</h2>
+            <p style="color:var(--text-soft);max-width:52ch;margin:0 auto;">Quelques-unes de nos créations réalisées au salon — chaque coiffure est une signature.</p>
+            <div class="gold-line"></div>
+        </div>
+
+        <div class="galerie-grid">
+
+            {# CARTE 1 #}
+            <div class="galerie-card">
+                <div class="galerie-photo placeholder" style="background: linear-gradient(135deg, #3d1a08 0%, #7d4e2d 50%, #c4933f 100%);">
+                    <span>👱‍♀️</span>
+                    <div class="galerie-overlay">
+                        <div class="galerie-overlay-content">
+                            <span class="ov-name">Nattes collées longues</span>
+                            <span class="ov-price">À partir de 20 000 FCFA</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="galerie-info">
+                    <span class="g-name">Nattes collées longues</span>
+                    <span class="g-price">20 000 FCFA</span>
+                </div>
+            </div>
+
+            {# CARTE 2 #}
+            <div class="galerie-card">
+                <div class="galerie-photo placeholder" style="background: linear-gradient(135deg, #1a0a03 0%, #4a2510 50%, #8B4513 100%);">
+                    <span>💆‍♀️</span>
+                    <div class="galerie-overlay">
+                        <div class="galerie-overlay-content">
+                            <span class="ov-name">Tissage brésilien</span>
+                            <span class="ov-price">À partir de 30 000 FCFA</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="galerie-info">
+                    <span class="g-name">Tissage brésilien</span>
+                    <span class="g-price">30 000 FCFA</span>
+                </div>
+            </div>
+
+            {# CARTE 3 #}
+            <div class="galerie-card">
+                <div class="galerie-photo placeholder" style="background: linear-gradient(135deg, #c4933f 0%, #e8c17a 50%, #f5e0a8 100%);">
+                    <span>✨</span>
+                    <div class="galerie-overlay">
+                        <div class="galerie-overlay-content">
+                            <span class="ov-name">Coloration miel</span>
+                            <span class="ov-price">À partir de 25 000 FCFA</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="galerie-info">
+                    <span class="g-name">Coloration miel</span>
+                    <span class="g-price">25 000 FCFA</span>
+                </div>
+            </div>
+
+            {# CARTE 4 #}
+            <div class="galerie-card">
+                <div class="galerie-photo placeholder" style="background: linear-gradient(135deg, #2d1b0e 0%, #5c3317 50%, #9b5e2a 100%);">
+                    <span>💇‍♀️</span>
+                    <div class="galerie-overlay">
+                        <div class="galerie-overlay-content">
+                            <span class="ov-name">Coupe + Brushing</span>
+                            <span class="ov-price">À partir de 15 000 FCFA</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="galerie-info">
+                    <span class="g-name">Coupe + Brushing</span>
+                    <span class="g-price">15 000 FCFA</span>
+                </div>
+            </div>
+
+            {# CARTE 5 #}
+            <div class="galerie-card">
+                <div class="galerie-photo placeholder" style="background: linear-gradient(135deg, #0d0704 0%, #2a120a 50%, #5c2f0e 100%);">
+                    <span>🧖‍♀️</span>
+                    <div class="galerie-overlay">
+                        <div class="galerie-overlay-content">
+                            <span class="ov-name">Soin capillaire profond</span>
+                            <span class="ov-price">À partir de 8 000 FCFA</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="galerie-info">
+                    <span class="g-name">Soin capillaire profond</span>
+                    <span class="g-price">8 000 FCFA</span>
+                </div>
+            </div>
+
+            {# CARTE 6 #}
+            <div class="galerie-card">
+                <div class="galerie-photo placeholder" style="background: linear-gradient(135deg, #4a1a0a 0%, #8B3a1a 50%, #c4693f 100%);">
+                    <span>💅</span>
+                    <div class="galerie-overlay">
+                        <div class="galerie-overlay-content">
+                            <span class="ov-name">Tresses simples</span>
+                            <span class="ov-price">À partir de 10 000 FCFA</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="galerie-info">
+                    <span class="g-name">Tresses simples</span>
+                    <span class="g-price">10 000 FCFA</span>
+                </div>
+            </div>
+
+        </div>
+
+        {# Note pour remplacer par de vraies photos #}
+        <div class="upload-note">
+            📸 <strong>Pour ajouter vos vraies photos :</strong> déposez vos images dans <code>public/images/realisations/</code> et remplacez les <code>placeholder</code> par une balise <code>&lt;img src="/images/realisations/votre-photo.jpg"&gt;</code>
+        </div>
+
+    </div>
+</section>
+
+{# ── CTA RÉSERVATION ── #}
+<section class="rdv-section" id="rdv">
+    <div class="container">
+        <span style="display:block;font-size:.68rem;letter-spacing:3px;text-transform:uppercase;color:var(--beige);margin-bottom:14px;">✦ Réservation</span>
+        <h2>Prêt(e) à prendre rendez-vous ?</h2>
+        <p>Choisissez votre créneau, payez en ligne et venez l'esprit tranquille.</p>
+        {% if app.user %}
+            <a href="{{ path('app_rdv') }}" class="btn" style="background:var(--cream);color:var(--brown-dark);border-color:var(--cream);">Réserver mon créneau</a>
+        {% else %}
+            <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+                <a href="{{ path('app_register') }}" class="btn" style="background:var(--cream);color:var(--brown-dark);border-color:var(--cream);">Créer mon compte</a>
+                <a href="{{ path('app_login') }}" class="btn-outline" style="color:var(--cream);border-color:rgba(253,248,243,.4);">Se connecter</a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,390 @@
+{% extends 'base.html.twig' %}
+{% block title %}Mon compte · BeautyAffair{% endblock %}
+
+{% block stylesheets %}
+<style>
+/* ── HERO ── */
+.profile-hero {
+    background: linear-gradient(135deg, var(--brown-dark) 0%, #5C2F0E 100%);
+    padding: 48px 0 0;
+}
+.profile-hero-inner {
+    max-width: 960px; margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: flex-end; gap: 28px;
+}
+.avatar-circle {
+    width: 88px; height: 88px; border-radius: 50%;
+    background: var(--brown); border: 3px solid rgba(253,248,243,.3);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem; font-weight: 600; color: var(--cream);
+    flex-shrink: 0; margin-bottom: -1px;
+}
+.profile-hero-text { padding-bottom: 20px; }
+.profile-hero-text h1 {
+    font-size: 1.7rem; color: var(--cream); margin-bottom: 4px;
+}
+.profile-hero-text p { color: var(--beige-dark); font-size: .88rem; }
+
+/* ── ONGLETS ── */
+.profile-tabs {
+    max-width: 960px; margin: 0 auto;
+    display: flex; gap: 0; padding: 0 24px;
+}
+.profile-tab {
+    padding: 14px 22px; font-size: .8rem; font-weight: 500;
+    letter-spacing: 1px; text-transform: uppercase;
+    color: rgba(253,248,243,.55); cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all .2s; user-select: none;
+    white-space: nowrap;
+}
+.profile-tab:hover { color: var(--beige); }
+.profile-tab.active { color: var(--cream); border-bottom-color: var(--gold); }
+
+/* ── CONTENU ── */
+.profile-content {
+    max-width: 960px; margin: 0 auto;
+    padding: 36px 24px 60px;
+}
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+/* ── CARTES ── */
+.pc {
+    background: var(--white); border: 1px solid var(--beige);
+    border-radius: 10px; margin-bottom: 20px; overflow: hidden;
+}
+.pc-head {
+    padding: 18px 24px; border-bottom: 1px solid var(--beige);
+    background: var(--cream-soft);
+    display: flex; align-items: center; justify-content: space-between;
+}
+.pc-head h2 { font-size: 1rem; color: var(--brown-dark); margin: 0; font-family: 'Cormorant Garamond', serif; }
+.pc-head span { font-size: .78rem; color: var(--text-muted); }
+.pc-body { padding: 28px; }
+.pc-body-sm { padding: 0; }
+
+/* ── FORMULAIRE ── */
+.pf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.pf-group { margin-bottom: 20px; }
+.pf-group label {
+    display: block; font-size: .72rem; font-weight: 600;
+    letter-spacing: 1px; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 8px;
+}
+.pf-group input {
+    width: 100%; padding: 11px 14px;
+    border: 1px solid var(--beige-dark); border-radius: 6px;
+    font-size: .92rem; font-family: 'Jost', sans-serif;
+    color: var(--text); background: var(--white);
+    transition: border-color .2s; box-sizing: border-box;
+}
+.pf-group input:focus { outline: none; border-color: var(--brown); }
+.pf-group input[readonly] { background: var(--cream-soft); color: var(--text-muted); cursor: default; }
+.pf-error { font-size: .78rem; color: #dc2626; margin-top: 5px; }
+.pf-hint  { font-size: .78rem; color: var(--text-muted); margin-top: 5px; }
+
+.pf-submit {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 28px; border-radius: 6px;
+    background: var(--brown); color: var(--white);
+    border: none; cursor: pointer;
+    font-family: 'Jost', sans-serif; font-size: .8rem;
+    font-weight: 500; letter-spacing: 1.5px;
+    text-transform: uppercase; transition: var(--ease);
+}
+.pf-submit:hover { background: var(--brown-dark); }
+
+/* ── PASSWORD STRENGTH ── */
+.pw-strength { margin-top: 8px; }
+.pw-bar { height: 3px; border-radius: 2px; background: var(--beige); margin-bottom: 4px; overflow: hidden; }
+.pw-bar-fill { height: 100%; width: 0; transition: width .3s, background .3s; border-radius: 2px; }
+.pw-label { font-size: .72rem; color: var(--text-muted); }
+
+/* ── TIMELINE RDV / COMMANDES ── */
+.history-list { list-style: none; }
+.history-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 24px; border-bottom: 1px solid var(--beige);
+    gap: 16px;
+}
+.history-item:last-child { border-bottom: none; }
+.history-icon {
+    width: 40px; height: 40px; border-radius: 8px;
+    background: var(--cream-soft); border: 1px solid var(--beige);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0;
+}
+.history-main { flex: 1; min-width: 0; }
+.history-title { font-size: .9rem; font-weight: 500; color: var(--brown-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.history-sub   { font-size: .78rem; color: var(--text-muted); margin-top: 2px; }
+.history-right { text-align: right; flex-shrink: 0; }
+.history-price { font-size: .9rem; font-weight: 600; color: var(--brown); }
+
+.status-badge {
+    display: inline-flex; align-items: center;
+    padding: 3px 10px; border-radius: 20px;
+    font-size: .65rem; font-weight: 600;
+    letter-spacing: .5px; text-transform: uppercase;
+    white-space: nowrap; margin-top: 4px;
+}
+.s-attente   { background: rgba(196,147,63,.12); color: #92400e; }
+.s-confirme  { background: rgba(22,163,74,.1);   color: #166534; }
+.s-annule    { background: rgba(220,38,38,.1);   color: #991b1b; }
+.s-termine   { background: rgba(125,78,45,.1);   color: var(--brown); }
+.s-payee     { background: rgba(22,163,74,.1);   color: #166534; }
+.s-expediee  { background: rgba(99,102,241,.1);  color: #4338ca; }
+.s-livree    { background: rgba(125,78,45,.1);   color: var(--brown); }
+
+.empty-box {
+    padding: 48px 24px; text-align: center;
+}
+.empty-box p { color: var(--text-muted); margin-bottom: 20px; }
+
+@media (max-width: 700px) {
+    .pf-row { grid-template-columns: 1fr; }
+    .profile-tab { padding: 12px 14px; font-size: .72rem; }
+    .profile-hero-inner { flex-direction: column; align-items: flex-start; gap: 16px; }
+}
+</style>
+{% endblock %}
+
+{% block body %}
+
+{# ── FLASHES ── #}
+{% set activeTab = app.request.query.get('tab', 'infos') %}
+
+<div class="profile-hero">
+    <div class="profile-hero-inner">
+        <div class="avatar-circle">{{ user.prenom|slice(0,1)|upper }}{{ user.nom|slice(0,1)|upper }}</div>
+        <div class="profile-hero-text">
+            <h1>{{ user.prenom }} {{ user.nom }}</h1>
+            <p>{{ user.email }}</p>
+        </div>
+    </div>
+    <div class="profile-tabs">
+        <div class="profile-tab {% if activeTab == 'infos' %}active{% endif %}" data-tab="infos">Mon compte</div>
+        <div class="profile-tab {% if activeTab == 'securite' %}active{% endif %}" data-tab="securite">Sécurité</div>
+        <div class="profile-tab {% if activeTab == 'rdv' %}active{% endif %}" data-tab="rdv">Rendez-vous</div>
+        <div class="profile-tab {% if activeTab == 'commandes' %}active{% endif %}" data-tab="commandes">Commandes</div>
+    </div>
+</div>
+
+<div class="profile-content">
+
+    {# Flash messages #}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div style="padding:14px 18px;border-radius:8px;margin-bottom:20px;font-size:.875rem;border:1px solid;
+                {% if label == 'success' %}background:rgba(22,163,74,.07);color:#166534;border-color:rgba(22,163,74,.25);
+                {% else %}background:rgba(220,38,38,.07);color:#991b1b;border-color:rgba(220,38,38,.25);{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    {# ── ONGLET : MON COMPTE ── #}
+    <div class="tab-pane {% if activeTab == 'infos' %}active{% endif %}" id="tab-infos">
+
+        <div class="pc">
+            <div class="pc-head">
+                <h2>Informations personnelles</h2>
+                <span>Ces infos apparaissent sur vos rendez-vous</span>
+            </div>
+            <div class="pc-body">
+                {{ form_start(formInfos, {action: path('app_profile'), method: 'POST'}) }}
+                <div class="pf-row">
+                    <div class="pf-group">
+                        {{ form_label(formInfos.prenom) }}
+                        {{ form_widget(formInfos.prenom) }}
+                        {% for e in formInfos.prenom.vars.errors %}<div class="pf-error">{{ e.message }}</div>{% endfor %}
+                    </div>
+                    <div class="pf-group">
+                        {{ form_label(formInfos.nom) }}
+                        {{ form_widget(formInfos.nom) }}
+                        {% for e in formInfos.nom.vars.errors %}<div class="pf-error">{{ e.message }}</div>{% endfor %}
+                    </div>
+                </div>
+                <div class="pf-group">
+                    <label>Adresse email</label>
+                    <input type="email" value="{{ user.email }}" readonly>
+                    <div class="pf-hint">L'email ne peut pas être modifié. Contactez-nous si besoin.</div>
+                </div>
+                <button type="submit" class="pf-submit">
+                    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                    Enregistrer
+                </button>
+                {{ form_end(formInfos) }}
+            </div>
+        </div>
+
+        <div class="pc">
+            <div class="pc-head"><h2>Récapitulatif</h2></div>
+            <div class="pc-body" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;text-align:center;">
+                {% set rdvCount = user.rendezVous|length %}
+                {% set cmdCount = user.commandes|length %}
+                <div style="padding:16px;background:var(--cream-soft);border-radius:8px;">
+                    <div style="font-size:2rem;font-family:'Cormorant Garamond',serif;color:var(--brown);font-weight:300;">{{ rdvCount }}</div>
+                    <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-top:4px;">Rendez-vous</div>
+                </div>
+                <div style="padding:16px;background:var(--cream-soft);border-radius:8px;">
+                    <div style="font-size:2rem;font-family:'Cormorant Garamond',serif;color:var(--brown);font-weight:300;">{{ cmdCount }}</div>
+                    <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-top:4px;">Commandes</div>
+                </div>
+                <div style="padding:16px;background:var(--cream-soft);border-radius:8px;">
+                    <div style="font-size:2rem;font-family:'Cormorant Garamond',serif;color:var(--brown);font-weight:300;">♥</div>
+                    <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-top:4px;"><a href="{{ path('app_favoris') }}" style="color:var(--brown);">Mes favoris</a></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    {# ── ONGLET : SÉCURITÉ ── #}
+    <div class="tab-pane {% if activeTab == 'securite' %}active{% endif %}" id="tab-securite">
+
+        <div class="pc">
+            <div class="pc-head">
+                <h2>Changer le mot de passe</h2>
+            </div>
+            <div class="pc-body" style="max-width:460px;">
+                <form method="post" action="{{ path('app_profile_password') }}" id="pw-form">
+                    <div class="pf-group">
+                        <label>Mot de passe actuel</label>
+                        <input type="password" name="actuel" required placeholder="••••••••">
+                    </div>
+                    <div class="pf-group">
+                        <label>Nouveau mot de passe</label>
+                        <input type="password" name="nouveau" id="pw-new" required placeholder="••••••••" oninput="checkStrength(this.value)">
+                        <div class="pw-strength">
+                            <div class="pw-bar"><div class="pw-bar-fill" id="pw-fill"></div></div>
+                            <div class="pw-label" id="pw-label">Au moins 8 caractères, une majuscule et un chiffre</div>
+                        </div>
+                    </div>
+                    <div class="pf-group">
+                        <label>Confirmer le nouveau mot de passe</label>
+                        <input type="password" name="confirme" required placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="pf-submit">Modifier le mot de passe</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    {# ── ONGLET : RENDEZ-VOUS ── #}
+    <div class="tab-pane {% if activeTab == 'rdv' %}active{% endif %}" id="tab-rdv">
+
+        <div class="pc">
+            <div class="pc-head">
+                <h2>Mes rendez-vous</h2>
+                <a href="{{ path('app_rdv') }}" class="btn btn-xs">+ Nouveau rendez-vous</a>
+            </div>
+            {% set rdvs = user.rendezVous|sort((a, b) => b.dateHeure <=> a.dateHeure) %}
+            {% if rdvs is empty %}
+                <div class="empty-box">
+                    <p>Vous n'avez pas encore de rendez-vous.</p>
+                    <a href="{{ path('app_rdv') }}" class="btn">Prendre un rendez-vous</a>
+                </div>
+            {% else %}
+                <ul class="history-list pc-body-sm">
+                    {% for rdv in rdvs %}
+                    <li class="history-item">
+                        <div class="history-icon">✂️</div>
+                        <div class="history-main">
+                            <div class="history-title">{{ rdv.prestation.nom }}</div>
+                            <div class="history-sub">{{ rdv.dateHeure|date('d/m/Y') }} à {{ rdv.dateHeure|date('H:i') }}</div>
+                        </div>
+                        <div class="history-right">
+                            <div class="history-price">{{ rdv.prestation.prix|number_format(0,',',' ') }} FCFA</div>
+                            <div>
+                                {% set s = rdv.statut %}
+                                <span class="status-badge s-{{ s }}">{{ s|replace({'_': ' '}) }}</span>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+    </div>
+
+    {# ── ONGLET : COMMANDES ── #}
+    <div class="tab-pane {% if activeTab == 'commandes' %}active{% endif %}" id="tab-commandes">
+
+        <div class="pc">
+            <div class="pc-head">
+                <h2>Mes commandes</h2>
+                <a href="{{ path('app_boutique') }}" class="btn btn-xs">Voir la boutique</a>
+            </div>
+            {% set commandes = user.commandes|sort((a, b) => b.createdAt <=> a.createdAt) %}
+            {% if commandes is empty %}
+                <div class="empty-box">
+                    <p>Vous n'avez pas encore passé de commande.</p>
+                    <a href="{{ path('app_boutique') }}" class="btn">Découvrir la boutique</a>
+                </div>
+            {% else %}
+                <ul class="history-list pc-body-sm">
+                    {% for cmd in commandes %}
+                    <li class="history-item">
+                        <div class="history-icon">🛍️</div>
+                        <div class="history-main">
+                            <div class="history-title">Commande #{{ cmd.id }}</div>
+                            <div class="history-sub">{{ cmd.createdAt|date('d/m/Y') }} · {{ cmd.lignes|length }} article{{ cmd.lignes|length > 1 ? 's' : '' }}</div>
+                        </div>
+                        <div class="history-right">
+                            <div class="history-price">{{ cmd.total|number_format(0,',',' ') }} FCFA</div>
+                            <div>
+                                {% set s = cmd.statut %}
+                                <span class="status-badge s-{{ s }}">{{ s|replace({'_': ' '}) }}</span>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+(function () {
+    const tabs    = document.querySelectorAll('.profile-tab');
+    const panes   = document.querySelectorAll('.tab-pane');
+    const initial = new URLSearchParams(window.location.search).get('tab') || 'infos';
+
+    function activate(name) {
+        tabs.forEach(t  => t.classList.toggle('active', t.dataset.tab === name));
+        panes.forEach(p => p.classList.toggle('active', p.id === 'tab-' + name));
+        const url = new URL(window.location);
+        url.searchParams.set('tab', name);
+        history.replaceState({}, '', url);
+    }
+
+    tabs.forEach(t => t.addEventListener('click', () => activate(t.dataset.tab)));
+    activate(initial);
+
+    /* Force strength */
+    window.checkStrength = function(v) {
+        const fill  = document.getElementById('pw-fill');
+        const label = document.getElementById('pw-label');
+        let score = 0;
+        if (v.length >= 8) score++;
+        if (/[A-Z]/.test(v)) score++;
+        if (/[0-9]/.test(v)) score++;
+        if (/[^a-zA-Z0-9]/.test(v)) score++;
+        const w = ['0%','30%','55%','80%','100%'][score];
+        const c = ['','#dc2626','#d97706','#16a34a','#16a34a'][score];
+        const l = ['','Trop court','Faible','Bon','Excellent'][score];
+        fill.style.width = w; fill.style.background = c;
+        label.textContent = l || 'Au moins 8 caractères, une majuscule et un chiffre';
+        label.style.color = c || 'var(--text-muted)';
+    };
+})();
+</script>
+
+{% endblock %}

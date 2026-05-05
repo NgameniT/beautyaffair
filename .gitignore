@@ -1,5 +1,6 @@
 
 ###> symfony/framework-bundle ###
+/.env
 /.env.local
 /.env.local.php
 /.env.*.local
@@ -25,3 +26,11 @@
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
+# Uploads utilisateurs (ne pas versionner les fichiers uploadés)
+/public/uploads/
+
+# Fichiers IDE
+/.idea/
+/.vscode/
+*.swp

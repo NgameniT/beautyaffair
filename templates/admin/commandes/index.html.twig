@@ -1,0 +1,122 @@
+{% extends 'admin/base_admin.html.twig' %}
+{% block title %}Commandes · Admin{% endblock %}
+
+{% block admin_body %}
+
+<div class="admin-page-header">
+    <div>
+        <div class="admin-breadcrumb"><a href="{{ path('app_admin_dashboard') }}">Admin</a> / Commandes</div>
+        <h1>Commandes</h1>
+    </div>
+</div>
+
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        <div style="padding:12px 16px;border-radius:6px;margin-bottom:16px;font-size:.875rem;border:1px solid;
+            {% if label=='success' %}background:rgba(22,163,74,.08);color:#166534;border-color:rgba(22,163,74,.3);
+            {% else %}background:rgba(220,38,38,.08);color:#991b1b;border-color:rgba(220,38,38,.3);{% endif %}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endfor %}
+
+<div class="admin-table-wrap">
+    <div class="admin-table-header">
+        <h2>{{ commandes|length }} commande{{ commandes|length > 1 ? 's' : '' }}</h2>
+        <div style="display:flex;gap:8px;font-size:.8rem;color:var(--text-muted);">
+            {% set total = commandes|reduce((s,c) => s + c.total, 0) %}
+            Total : <strong style="color:var(--brown);">{{ total|number_format(0,',',' ') }} FCFA</strong>
+        </div>
+    </div>
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Client</th>
+                <th>Articles</th>
+                <th>Total</th>
+                <th>Livraison</th>
+                <th>Date</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cmd in commandes %}
+            <tr>
+                <td style="color:var(--text-muted);font-size:.8rem;">#{{ cmd.id }}</td>
+                <td>
+                    <strong style="color:var(--brown-dark);">{{ cmd.client.prenom }} {{ cmd.client.nom }}</strong><br>
+                    <small style="color:var(--text-muted);">{{ cmd.client.email }}</small>
+                </td>
+                <td>
+                    {% for ligne in cmd.lignes %}
+                        <div style="font-size:.8rem;color:var(--text-soft);">{{ ligne.produit.nom }} × {{ ligne.quantite }}</div>
+                    {% endfor %}
+                </td>
+                <td style="color:var(--brown);font-weight:600;white-space:nowrap;">
+                    {{ cmd.total|number_format(0,',',' ') }} FCFA
+                </td>
+                <td style="font-size:.82rem;color:var(--text-soft);">
+                    {% if cmd.adresseLivraison %}
+                        {{ cmd.adresseLivraison }}<br>
+                        <span style="color:var(--text-muted);">📞 {{ cmd.telephone }}</span>
+                    {% else %}
+                        <span style="color:var(--text-muted);">—</span>
+                    {% endif %}
+                </td>
+                <td style="font-size:.82rem;color:var(--text-muted);white-space:nowrap;">
+                    {{ cmd.createdAt|date('d/m/Y') }}<br>{{ cmd.createdAt|date('H:i') }}
+                </td>
+                <td>
+                    {% set s = cmd.statut %}
+                    {% if s == 'en_attente' %}
+                        <span class="badge-pill badge-attente">⏳ En attente</span>
+                    {% elseif s == 'payee' %}
+                        <span class="badge-pill badge-confirme">✓ Payée</span>
+                    {% elseif s == 'expediee' %}
+                        <span class="badge-pill" style="background:rgba(99,102,241,.1);color:#4338ca;">🚚 Expédiée</span>
+                    {% elseif s == 'livree' %}
+                        <span class="badge-pill badge-termine">✓ Livrée</span>
+                    {% elseif s == 'annulee' %}
+                        <span class="badge-pill badge-annule">✗ Annulée</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="action-btns" style="flex-direction:column;align-items:flex-start;">
+                        {% if cmd.statut == 'en_attente' %}
+                            <form method="post" action="{{ path('app_admin_commande_statut', {id: cmd.id, statut: 'payee'}) }}">
+                                <button class="btn-sm btn-sm-success">Marquer payée</button>
+                            </form>
+                        {% endif %}
+                        {% if cmd.statut == 'payee' %}
+                            <form method="post" action="{{ path('app_admin_commande_statut', {id: cmd.id, statut: 'expediee'}) }}">
+                                <button class="btn-sm btn-sm-neutral">Marquer expédiée</button>
+                            </form>
+                        {% endif %}
+                        {% if cmd.statut == 'expediee' %}
+                            <form method="post" action="{{ path('app_admin_commande_statut', {id: cmd.id, statut: 'livree'}) }}">
+                                <button class="btn-sm btn-sm-success">Marquer livrée</button>
+                            </form>
+                        {% endif %}
+                        {% if cmd.statut not in ['livree', 'annulee'] %}
+                            <form method="post" action="{{ path('app_admin_commande_statut', {id: cmd.id, statut: 'annulee'}) }}"
+                                  onsubmit="return confirm('Annuler cette commande ?')">
+                                <button class="btn-sm btn-sm-danger">Annuler</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="8" style="text-align:center;padding:40px;color:var(--text-muted);">
+                    Aucune commande pour le moment.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

@@ -1,0 +1,349 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ produit.nom }} · BeautyAffair{% endblock %}
+
+{% block stylesheets %}
+<style>
+.breadcrumb {
+    padding: 16px 0;
+    font-size: .8rem;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--beige);
+    margin-bottom: 0;
+}
+.breadcrumb a { color: var(--brown); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb span { margin: 0 8px; color: var(--beige-dark); }
+
+.produit-wrap {
+    padding: 48px 0 80px;
+}
+.produit-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    align-items: start;
+}
+
+/* ── PHOTO ── */
+.produit-photo {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--beige);
+    background: var(--cream-soft);
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: sticky;
+    top: 90px;
+}
+.produit-photo img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+}
+.produit-photo .no-photo {
+    font-size: 8rem;
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.produit-photo .no-photo small {
+    font-size: 1rem;
+    color: var(--text-muted);
+    font-family: 'Jost', sans-serif;
+}
+
+/* ── INFOS ── */
+.produit-infos { padding-top: 8px; }
+.produit-cat {
+    font-size: .68rem; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--brown);
+    display: block; margin-bottom: 12px;
+}
+.produit-nom {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem; color: var(--brown-dark);
+    line-height: 1.15; margin-bottom: 20px;
+}
+.produit-prix {
+    font-size: 1.8rem; font-weight: 600;
+    color: var(--brown); margin-bottom: 8px;
+}
+.stock-badge {
+    display: inline-block;
+    font-size: .72rem; padding: 4px 12px;
+    border-radius: 4px; font-weight: 500;
+    margin-bottom: 24px;
+}
+.stock-ok   { background: rgba(22,163,74,.1);  color: #166534; }
+.stock-low  { background: rgba(234,179,8,.1);  color: #854d0e; }
+.stock-none { background: rgba(220,38,38,.08); color: #991b1b; }
+
+.gold-divider {
+    width: 40px; height: 2px;
+    background: var(--gold);
+    margin: 24px 0;
+}
+.produit-desc {
+    font-size: .95rem; color: var(--text-soft);
+    line-height: 1.8; margin-bottom: 32px;
+}
+
+/* ── QTY + ACTIONS ── */
+.qty-row {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 16px;
+}
+.qty-label { font-size: .78rem; color: var(--text-muted); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+.qty-ctrl {
+    display: flex; align-items: center;
+    border: 1px solid var(--beige-dark); border-radius: 6px; overflow: hidden;
+}
+.qty-ctrl button {
+    width: 36px; height: 36px; border: none; background: var(--cream-soft);
+    cursor: pointer; font-size: 1.1rem; color: var(--brown);
+    transition: background .15s;
+}
+.qty-ctrl button:hover { background: var(--beige); }
+.qty-ctrl input {
+    width: 50px; height: 36px; border: none; border-left: 1px solid var(--beige-dark);
+    border-right: 1px solid var(--beige-dark); text-align: center;
+    font-family: 'Jost', sans-serif; font-size: .95rem; color: var(--text);
+    background: var(--white);
+}
+.qty-ctrl input:focus { outline: none; }
+
+.btn-cart {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 32px; border-radius: 6px;
+    background: var(--brown); color: var(--white);
+    border: 1px solid var(--brown); cursor: pointer;
+    font-size: .82rem; font-weight: 500; letter-spacing: 2px;
+    text-transform: uppercase; font-family: 'Jost', sans-serif;
+    transition: var(--ease); width: 100%; justify-content: center;
+    margin-bottom: 12px;
+}
+.btn-cart:hover { background: var(--brown-dark); border-color: var(--brown-dark); }
+.btn-cart:disabled { opacity: .5; cursor: not-allowed; }
+.btn-cart svg { width: 18px; height: 18px; }
+
+.btn-fav-full {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 11px; border-radius: 6px;
+    border: 1px solid var(--beige-dark); background: var(--cream-soft);
+    cursor: pointer; font-size: .8rem; font-weight: 500; letter-spacing: 1.5px;
+    text-transform: uppercase; font-family: 'Jost', sans-serif; color: var(--text-soft);
+    transition: var(--ease);
+}
+.btn-fav-full:hover, .btn-fav-full.is-fav { border-color: var(--brown); color: var(--brown); background: rgba(125,78,45,.06); }
+.btn-fav-full svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+.btn-fav-full.is-fav svg { fill: var(--brown); }
+
+.info-list { list-style: none; margin-top: 28px; }
+.info-list li {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 0; border-bottom: 1px solid var(--beige);
+    font-size: .87rem; color: var(--text-soft);
+}
+.info-list li:last-child { border-bottom: none; }
+.info-list .ico { font-size: 1.1rem; width: 22px; text-align: center; }
+
+/* ── PRODUITS SIMILAIRES ── */
+.similaires { padding: 64px 0; background: var(--cream-soft); }
+.sim-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+.sim-card {
+    background: var(--white); border: 1px solid var(--beige);
+    border-radius: 8px; overflow: hidden; transition: all .3s ease;
+    text-decoration: none; display: block;
+}
+.sim-card:hover {
+    border-color: var(--brown-light);
+    box-shadow: 0 8px 24px rgba(125,78,45,.1);
+    transform: translateY(-3px);
+}
+.sim-img {
+    height: 160px; background: var(--cream-soft);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3.5rem; border-bottom: 1px solid var(--beige);
+}
+.sim-img img { width: 100%; height: 100%; object-fit: cover; }
+.sim-body { padding: 16px; }
+.sim-body h4 { font-family:'Cormorant Garamond',serif; font-size:1.05rem; color:var(--brown-dark); margin-bottom:6px; }
+.sim-body .sim-prix { color:var(--brown); font-weight:600; font-size:.9rem; }
+
+@media (max-width: 860px) {
+    .produit-layout { grid-template-columns: 1fr; gap: 32px; }
+    .produit-photo { position: static; }
+    .sim-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 540px) { .sim-grid { grid-template-columns: 1fr; } }
+</style>
+{% endblock %}
+
+{% block body %}
+
+{# BREADCRUMB #}
+<div class="breadcrumb">
+    <div class="container">
+        <a href="{{ path('app_home') }}">Accueil</a>
+        <span>/</span>
+        <a href="{{ path('app_boutique') }}">Boutique</a>
+        <span>/</span>
+        {{ produit.nom }}
+    </div>
+</div>
+
+{# DÉTAIL PRODUIT #}
+<div class="produit-wrap">
+    <div class="container">
+        <div class="produit-layout">
+
+            {# PHOTO #}
+            <div class="produit-photo">
+                {% if produit.image %}
+                    <img src="/uploads/produits/{{ produit.image }}" alt="{{ produit.nom }}">
+                {% else %}
+                    <div class="no-photo">
+                        <span>{{ produit.categorie.icone ?? '🛍️' }}</span>
+                        <small>Photo bientôt disponible</small>
+                    </div>
+                {% endif %}
+            </div>
+
+            {# INFOS #}
+            <div class="produit-infos">
+                <span class="produit-cat">✦ {{ produit.categorie.nom }}</span>
+                <h1 class="produit-nom">{{ produit.nom }}</h1>
+
+                <div class="produit-prix">{{ produit.prix|number_format(0,',',' ') }} FCFA</div>
+
+                {% if produit.stock == 0 %}
+                    <span class="stock-badge stock-none">Rupture de stock</span>
+                {% elseif produit.stock <= 3 %}
+                    <span class="stock-badge stock-low">Plus que {{ produit.stock }} en stock</span>
+                {% else %}
+                    <span class="stock-badge stock-ok">En stock</span>
+                {% endif %}
+
+                <div class="gold-divider"></div>
+
+                {% if produit.description %}
+                    <p class="produit-desc">{{ produit.description }}</p>
+                {% endif %}
+
+                {# FORMULAIRE AJOUT PANIER #}
+                {% if produit.stock > 0 %}
+                    <form method="post" action="{{ path('app_cart_add', {id: produit.id}) }}" id="form-cart">
+                        <div class="qty-row">
+                            <span class="qty-label">Quantité</span>
+                            <div class="qty-ctrl">
+                                <button type="button" onclick="changeQty(-1)">−</button>
+                                <input type="number" name="qty" id="qty-input" value="1" min="1" max="{{ produit.stock }}">
+                                <button type="button" onclick="changeQty(1)">+</button>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-cart">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                            </svg>
+                            Ajouter au panier
+                        </button>
+                    </form>
+                {% else %}
+                    <button disabled class="btn-cart">Produit indisponible</button>
+                {% endif %}
+
+                {# FAVORIS #}
+                <button type="button"
+                    class="btn-fav-full {{ isFavori ? 'is-fav' : '' }}"
+                    id="fav-btn"
+                    data-url="{{ path('app_favoris_toggle', {id: produit.id}) }}">
+                    <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    <span id="fav-label">{{ isFavori ? 'Dans mes favoris' : 'Ajouter aux favoris' }}</span>
+                </button>
+
+                {# INFOS LIVRAISON #}
+                <ul class="info-list">
+                    <li><span class="ico">🚚</span> Livraison à Cotonou sous 24–48h</li>
+                    <li><span class="ico">💳</span> Paiement sécurisé — MTN Money, Moov Money, Carte</li>
+                    <li><span class="ico">↩️</span> Retours sous 48h si produit non conforme</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{# PRODUITS SIMILAIRES #}
+{% if similaires is not empty %}
+<section class="similaires">
+    <div class="container">
+        <div style="text-align:center;margin-bottom:36px;">
+            <span style="font-size:.68rem;letter-spacing:3px;text-transform:uppercase;color:var(--brown);display:block;margin-bottom:10px;">✦ Dans la même catégorie</span>
+            <h2 style="color:var(--brown-dark);">Vous aimerez aussi</h2>
+        </div>
+        <div class="sim-grid">
+            {% for p in similaires %}
+            <a href="{{ path('app_boutique_show', {id: p.id}) }}" class="sim-card">
+                <div class="sim-img">
+                    {% if p.image %}
+                        <img src="/uploads/produits/{{ p.image }}" alt="{{ p.nom }}">
+                    {% else %}
+                        {{ p.categorie.icone ?? '🛍️' }}
+                    {% endif %}
+                </div>
+                <div class="sim-body">
+                    <h4>{{ p.nom }}</h4>
+                    <div class="sim-prix">{{ p.prix|number_format(0,',',' ') }} FCFA</div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+function changeQty(delta) {
+    var input = document.getElementById('qty-input');
+    var val = parseInt(input.value) + delta;
+    var max = parseInt(input.max);
+    if (val < 1) val = 1;
+    if (val > max) val = max;
+    input.value = val;
+}
+
+(function () {
+    var CSRF = '{{ csrf_token('fav') }}';
+    var btn  = document.getElementById('fav-btn');
+    var badge = document.getElementById('fav-badge');
+    if (!btn) return;
+
+    btn.addEventListener('click', async function () {
+        try {
+            var resp = await fetch(btn.dataset.url, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: '_token=' + encodeURIComponent(CSRF),
+            });
+            if (!resp.ok) return;
+            var data = await resp.json();
+            btn.classList.toggle('is-fav', data.added);
+            document.getElementById('fav-label').textContent = data.added ? 'Dans mes favoris' : 'Ajouter aux favoris';
+            if (badge) {
+                badge.textContent = data.count;
+                badge.style.display = data.count > 0 ? '' : 'none';
+            }
+        } catch (e) {}
+    });
+})();
+</script>
+{% endblock %}

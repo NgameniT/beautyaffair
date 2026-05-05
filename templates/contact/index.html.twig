@@ -1,0 +1,219 @@
+{% extends 'base.html.twig' %}
+{% block title %}Contact · BeautyAffair{% endblock %}
+
+{% block stylesheets %}
+<style>
+.page-header {
+    background: linear-gradient(135deg, var(--brown-dark) 0%, #5C2F0E 100%);
+    padding: 72px 0 56px;
+    text-align: center;
+    position: relative; overflow: hidden;
+}
+.page-header::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 100%, rgba(196,147,63,.15) 0%, transparent 65%);
+}
+.page-header .container { position: relative; z-index: 1; }
+.page-header .eyebrow {
+    font-size: .68rem; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--beige);
+    display: block; margin-bottom: 14px;
+}
+.page-header h1 { color: var(--cream); margin-bottom: 14px; }
+.page-header p { color: var(--beige-dark); max-width: 48ch; margin: 0 auto; }
+
+.section { padding: 80px 0; }
+.section-alt { background: var(--cream-soft); }
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 48px; align-items: start;
+}
+
+.info-block { margin-bottom: 32px; }
+.info-block h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem; color: var(--brown-dark);
+    margin-bottom: 16px;
+}
+.info-item {
+    display: flex; gap: 14px; align-items: flex-start;
+    margin-bottom: 14px; font-size: .9rem;
+}
+.info-item .ico {
+    width: 38px; height: 38px; flex-shrink: 0;
+    background: rgba(125,78,45,.1);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+}
+.info-item strong { color: var(--brown-dark); display: block; font-size: .8rem; margin-bottom: 2px; }
+.info-item span { color: var(--text-soft); }
+
+.horaire-table { width: 100%; }
+.horaire-row {
+    display: flex; justify-content: space-between;
+    padding: 10px 0; border-bottom: 1px solid var(--beige);
+    font-size: .9rem;
+}
+.horaire-row:last-child { border-bottom: none; }
+.horaire-row .day { color: var(--text-soft); }
+.horaire-row .time { color: var(--brown); font-weight: 500; }
+
+.contact-form {
+    background: var(--white);
+    border: 1px solid var(--beige);
+    border-radius: 10px;
+    padding: 36px 32px;
+}
+.contact-form h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; color: var(--brown-dark);
+    margin-bottom: 8px;
+}
+.contact-form > p { color: var(--text-soft); margin-bottom: 28px; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+@media (max-width: 900px) {
+    .contact-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+}
+</style>
+{% endblock %}
+
+{% block body %}
+
+<div class="page-header">
+    <div class="container">
+        <span class="eyebrow">✦ Contact</span>
+        <h1>Nous contacter</h1>
+        <p>Une question ? Une demande spéciale ? Envoyez-nous un message, nous répondons sous 24h.</p>
+    </div>
+</div>
+
+<section class="section">
+    <div class="container">
+        <div class="contact-grid">
+
+            <!-- INFOS -->
+            <div>
+                <div class="info-block">
+                    <h3>Nos coordonnées</h3>
+                    <div class="info-item">
+                        <div class="ico">📍</div>
+                        <div>
+                            <strong>Adresse</strong>
+                            <span>Cotonou, Bénin</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="ico">📞</div>
+                        <div>
+                            <strong>Téléphone</strong>
+                            <span>+229 XX XX XX XX</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="ico">📱</div>
+                        <div>
+                            <strong>WhatsApp</strong>
+                            <span>+229 XX XX XX XX</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="ico">📧</div>
+                        <div>
+                            <strong>Email</strong>
+                            <span>contact@beautyaffair.bj</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-block">
+                    <h3>Horaires d'ouverture</h3>
+                    <div class="horaire-table">
+                        <div class="horaire-row">
+                            <span class="day">Lundi – Vendredi</span>
+                            <span class="time">08h00 – 19h00</span>
+                        </div>
+                        <div class="horaire-row">
+                            <span class="day">Samedi</span>
+                            <span class="time">08h00 – 20h00</span>
+                        </div>
+                        <div class="horaire-row">
+                            <span class="day">Dimanche</span>
+                            <span class="time">10h00 – 17h00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-block">
+                    <h3>Réseaux sociaux</h3>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <a href="#" class="btn-outline btn-xs">Facebook</a>
+                        <a href="#" class="btn-outline btn-xs">Instagram</a>
+                        <a href="#" class="btn-outline btn-xs">TikTok</a>
+                        <a href="#" class="btn-outline btn-xs">WhatsApp</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FORMULAIRE -->
+            <div class="contact-form">
+                <h3>Envoyer un message</h3>
+                <p>Remplissez le formulaire ci-dessous et nous vous recontacterons rapidement.</p>
+
+                {% for label, messages in app.flashes %}
+                    {% for msg in messages %}
+                        <div style="padding:12px 16px;border-radius:6px;margin-bottom:16px;font-size:.875rem;border:1px solid;
+                            {% if label=='success' %}background:rgba(22,163,74,.08);color:#166534;border-color:rgba(22,163,74,.3);
+                            {% else %}background:rgba(220,38,38,.08);color:#991b1b;border-color:rgba(220,38,38,.3);{% endif %}">
+                            {{ msg }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+
+                <form method="post" action="{{ path('app_contact') }}">
+                    <div class="form-row">
+                        <div class="field">
+                            <label for="nom">Nom</label>
+                            <input type="text" id="nom" name="nom" placeholder="Votre nom" required>
+                        </div>
+                        <div class="field">
+                            <label for="prenom">Prénom</label>
+                            <input type="text" id="prenom" name="prenom" placeholder="Votre prénom">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="votre@email.com" required>
+                    </div>
+                    <div class="field">
+                        <label for="telephone">Téléphone (optionnel)</label>
+                        <input type="tel" id="telephone" name="telephone" placeholder="+229 XX XX XX XX">
+                    </div>
+                    <div class="field">
+                        <label for="sujet">Sujet</label>
+                        <select id="sujet" name="sujet">
+                            <option value="">Choisissez un sujet</option>
+                            <option>Rendez-vous</option>
+                            <option>Commande boutique</option>
+                            <option>Renseignements tarifs</option>
+                            <option>Autre</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="5" placeholder="Votre message..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn" style="width:100%;">Envoyer le message</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

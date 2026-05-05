@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+{% block title %}Commande confirmée · BeautyAffair{% endblock %}
+
+{% block body %}
+<div style="padding:80px 0;text-align:center;">
+    <div class="container" style="max-width:560px;margin:0 auto;">
+
+        <div style="width:80px;height:80px;background:rgba(22,163,74,.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:2.2rem;">✅</div>
+
+        <h1 style="color:var(--brown-dark);margin-bottom:12px;">Commande confirmée !</h1>
+        <p style="color:var(--text-soft);margin-bottom:32px;font-size:1rem;line-height:1.7;">
+            Merci {{ app.user.prenom }} ! Votre commande <strong style="color:var(--brown);">#{{ commande.id }}</strong>
+            a bien été enregistrée. Notre équipe vous contactera sous 24h pour
+            organiser la livraison et le paiement.
+        </p>
+
+        <div style="background:var(--cream-soft);border:1px solid var(--beige);border-radius:10px;padding:24px;text-align:left;margin-bottom:32px;">
+            <p style="font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;">Détails de la commande</p>
+            {% for ligne in commande.lignes %}
+            <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--beige);font-size:.875rem;">
+                <span style="color:var(--text-soft);">{{ ligne.produit.nom }} ×{{ ligne.quantite }}</span>
+                <span style="color:var(--brown);font-weight:500;">{{ ligne.sousTotal|number_format(0,',',' ') }} FCFA</span>
+            </div>
+            {% endfor %}
+            <div style="display:flex;justify-content:space-between;padding:12px 0 0;font-weight:600;">
+                <span style="color:var(--brown-dark);">Total</span>
+                <span style="color:var(--brown);">{{ commande.total|number_format(0,',',' ') }} FCFA</span>
+            </div>
+        </div>
+
+        <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+            <a href="{{ path('app_boutique') }}" class="btn-outline">Retour à la boutique</a>
+            <a href="{{ path('app_home') }}" class="btn">Retour à l'accueil</a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
