@@ -65,13 +65,13 @@
                 <td>{{ rdv.dateHeure|date('d/m/Y à H:i') }}</td>
                 <td>
                     {% if rdv.statut == 'en_attente' %}
-                        <span class="badge-pill badge-attente">⏳ En attente</span>
+                        <span class="badge-pill badge-attente">En attente</span>
                     {% elseif rdv.statut == 'confirme' %}
-                        <span class="badge-pill badge-confirme">✅ Confirmé</span>
+                        <span class="badge-pill badge-confirme">Confirmé</span>
                     {% elseif rdv.statut == 'annule' %}
-                        <span class="badge-pill badge-annule">❌ Annulé</span>
+                        <span class="badge-pill badge-annule">Annulé</span>
                     {% else %}
-                        <span class="badge-pill badge-termine">✔ Terminé</span>
+                        <span class="badge-pill badge-termine">Terminé</span>
                     {% endif %}
                 </td>
                 <td>

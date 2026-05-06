@@ -60,7 +60,7 @@
                 <td style="font-size:.82rem;color:var(--text-soft);">
                     {% if cmd.adresseLivraison %}
                         {{ cmd.adresseLivraison }}<br>
-                        <span style="color:var(--text-muted);">📞 {{ cmd.telephone }}</span>
+                        <span style="color:var(--text-muted);">{{ cmd.telephone }}</span>
                     {% else %}
                         <span style="color:var(--text-muted);">—</span>
                     {% endif %}
@@ -71,15 +71,15 @@
                 <td>
                     {% set s = cmd.statut %}
                     {% if s == 'en_attente' %}
-                        <span class="badge-pill badge-attente">⏳ En attente</span>
+                        <span class="badge-pill badge-attente">En attente</span>
                     {% elseif s == 'payee' %}
-                        <span class="badge-pill badge-confirme">✓ Payée</span>
+                        <span class="badge-pill badge-confirme">Payée</span>
                     {% elseif s == 'expediee' %}
-                        <span class="badge-pill" style="background:rgba(99,102,241,.1);color:#4338ca;">🚚 Expédiée</span>
+                        <span class="badge-pill" style="background:rgba(99,102,241,.1);color:#4338ca;">Expédiée</span>
                     {% elseif s == 'livree' %}
-                        <span class="badge-pill badge-termine">✓ Livrée</span>
+                        <span class="badge-pill badge-termine">Livrée</span>
                     {% elseif s == 'annulee' %}
-                        <span class="badge-pill badge-annule">✗ Annulée</span>
+                        <span class="badge-pill badge-annule">Annulée</span>
                     {% endif %}
                 </td>
                 <td>

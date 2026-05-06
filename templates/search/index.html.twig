@@ -91,14 +91,22 @@
 
         {% if q|length < 2 %}
             <div class="no-result">
-                <div class="ico">🔍</div>
+                <div class="ico" style="margin-bottom:16px;display:flex;justify-content:center;">
+                    <div style="width:64px;height:64px;background:rgba(125,78,45,.09);border-radius:50%;border:1px solid rgba(125,78,45,.2);display:flex;align-items:center;justify-content:center;">
+                        <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="var(--brown)" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    </div>
+                </div>
                 <h3>Tapez votre recherche</h3>
                 <p>Entrez au moins 2 caractères pour rechercher un service, une perruque ou un bijou.</p>
             </div>
 
         {% elseif produits is empty and prestations is empty %}
             <div class="no-result">
-                <div class="ico">😕</div>
+                <div class="ico" style="margin-bottom:16px;display:flex;justify-content:center;">
+                    <div style="width:64px;height:64px;background:rgba(125,78,45,.09);border-radius:50%;border:1px solid rgba(125,78,45,.2);display:flex;align-items:center;justify-content:center;">
+                        <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="var(--brown)" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="2.5"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="2.5"/><path d="M9.5 15.5a5 5 0 0 1 5 0"/></svg>
+                    </div>
+                </div>
                 <h3>Aucun résultat pour "{{ q }}"</h3>
                 <p>Essayez d'autres mots-clés, ou parcourez nos catégories.</p>
                 <div style="display:flex;gap:12px;justify-content:center;margin-top:28px;flex-wrap:wrap;">

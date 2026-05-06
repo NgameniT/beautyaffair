@@ -54,33 +54,9 @@
 .stock-badge.low  { background:rgba(234,179,8,.1); color:#854d0e; }
 .stock-badge.none { background:rgba(220,38,38,.08); color:#991b1b; }
 
-.add-cart-form { display:inline; }
-.add-cart-form button {
-    display:inline-flex; align-items:center; gap:6px;
-    padding:7px 16px; border-radius:4px;
-    background:var(--brown); color:var(--white);
-    border:1px solid var(--brown); cursor:pointer;
-    font-size:.75rem; font-weight:500; letter-spacing:1.5px;
-    text-transform:uppercase; font-family:'Jost',sans-serif;
-    transition:var(--ease); white-space:nowrap;
-}
-.add-cart-form button:hover { background:var(--brown-dark); border-color:var(--brown-dark); }
-.add-cart-form button:disabled { opacity:.5; cursor:not-allowed; }
-.add-cart-form button svg { width:14px; height:14px; }
-
 .info-band { padding: 56px 0; }
 .info-band .three-col > div { text-align:center; padding:24px; }
 
-.fav-btn {
-    width:34px; height:34px; border-radius:50%;
-    border:1px solid var(--beige-dark); background:var(--cream-soft);
-    cursor:pointer; display:flex; align-items:center; justify-content:center;
-    flex-shrink:0; transition:transform .15s ease, border-color .2s;
-}
-.fav-btn:hover { border-color:var(--brown); }
-.fav-btn svg { width:15px; height:15px; stroke:var(--brown-light); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; transition:all .2s; }
-.fav-btn.is-fav { border-color:var(--brown); background:rgba(125,78,45,.08); }
-.fav-btn.is-fav svg { fill:var(--brown); stroke:var(--brown); }
 
 @media (max-width: 900px) { .product-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 600px) { .product-grid { grid-template-columns: 1fr; } }
@@ -111,7 +87,7 @@
         {% else %}
         <div class="product-grid">
             {% for produit in perruques %}
-            {% include 'boutique/_card.html.twig' with {produit: produit, favorisIds: favorisIds, icone: '👱‍♀️'} %}
+            {% include 'boutique/_card.html.twig' with {produit: produit} %}
             {% endfor %}
         </div>
         {% endif %}
@@ -132,7 +108,7 @@
         {% else %}
         <div class="product-grid">
             {% for produit in bijoux %}
-            {% include 'boutique/_card.html.twig' with {produit: produit, favorisIds: favorisIds, icone: '💍'} %}
+            {% include 'boutique/_card.html.twig' with {produit: produit} %}
             {% endfor %}
         </div>
         {% endif %}
@@ -151,7 +127,7 @@
         </div>
         <div class="product-grid">
             {% for produit in soinsPerruques %}
-            {% include 'boutique/_card.html.twig' with {produit: produit, favorisIds: favorisIds, icone: '🧴'} %}
+            {% include 'boutique/_card.html.twig' with {produit: produit} %}
             {% endfor %}
         </div>
     </div>
@@ -163,19 +139,19 @@
     <div class="container">
         <div class="three-col">
             <div>
-                <div style="font-size:2.5rem;margin-bottom:14px;">🚚</div>
+                <div style="margin-bottom:14px;"><svg width="36" height="36" fill="none" viewBox="0 0 24 24" stroke="var(--brown)" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
                 <h3 style="color:var(--brown-dark);margin-bottom:8px;">Livraison Cotonou</h3>
                 <p>Livraison rapide sous 24–48h après confirmation de commande.</p>
             </div>
             <div style="background:var(--cream-soft);border-radius:8px;">
-                <div style="font-size:2.5rem;margin-bottom:14px;">💳</div>
-                <h3 style="color:var(--brown-dark);margin-bottom:8px;">Paiement sécurisé</h3>
-                <p>MTN Mobile Money, Moov Money ou carte bancaire via PayDunya.</p>
+                <div style="margin-bottom:14px;"><svg width="36" height="36" fill="none" viewBox="0 0 24 24" stroke="var(--brown)" stroke-width="1.5" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.92 13.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.85 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+                <h3 style="color:var(--brown-dark);margin-bottom:8px;">Renseignements</h3>
+                <p>Contactez-nous par téléphone ou WhatsApp pour toute question sur un produit.</p>
             </div>
             <div>
-                <div style="font-size:2.5rem;margin-bottom:14px;">↩️</div>
-                <h3 style="color:var(--brown-dark);margin-bottom:8px;">Retours faciles</h3>
-                <p>Produit non conforme ? Contactez-nous sous 48h.</p>
+                <div style="margin-bottom:14px;"><svg width="36" height="36" fill="none" viewBox="0 0 24 24" stroke="var(--brown)" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+                <h3 style="color:var(--brown-dark);margin-bottom:8px;">Rendez-vous</h3>
+                <p>Venez découvrir nos produits en salon à Cotonou. <a href="{{ path('app_rdv') }}" style="color:var(--brown);">Prendre RDV</a></p>
             </div>
         </div>
     </div>
@@ -183,39 +159,3 @@
 
 {% endblock %}
 
-{% block javascripts %}
-<script>
-(function () {
-    var CSRF  = '{{ csrf_token('fav') }}';
-    var badge = document.getElementById('fav-badge');
-
-    document.querySelectorAll('.fav-btn').forEach(function (btn) {
-        btn.addEventListener('click', async function () {
-            try {
-                var resp = await fetch(btn.dataset.url, {
-                    method: 'POST',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: '_token=' + encodeURIComponent(CSRF),
-                });
-                if (!resp.ok) return;
-                var data = await resp.json();
-
-                btn.classList.toggle('is-fav', data.added);
-                btn.title = data.added ? 'Retirer des favoris' : 'Ajouter aux favoris';
-
-                btn.style.transform = 'scale(1.35)';
-                setTimeout(function () { btn.style.transform = ''; }, 180);
-
-                if (badge) {
-                    badge.textContent = data.count;
-                    badge.style.display = data.count > 0 ? '' : 'none';
-                }
-            } catch (e) {}
-        });
-    });
-})();
-</script>
-{% endblock %}

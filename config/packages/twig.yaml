@@ -1,5 +1,8 @@
 twig:
     file_name_pattern: '*.twig'
+    globals:
+        salon_whatsapp: '%env(SALON_WHATSAPP)%'
+        salon_phone:    '%env(SALON_PHONE)%'
 
 when@test:
     twig:
